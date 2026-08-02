@@ -8,17 +8,17 @@ from email.message import EmailMessage
 from fastapi.responses import FileResponse
 import os
 
+app = FastAPI(
+    title="CinemaMatch AI API",
+    description="Backend for CinemaMatch AI Platform",
+    version="1.0.0"
+)
 @app.get("/")
 def serve_root():
     if os.path.exists("index.html"):
         return FileResponse("index.html")
     return {"error": "index.html not found"}
 
-app = FastAPI(
-    title="CinemaMatch AI API",
-    description="Backend for CinemaMatch AI Platform",
-    version="1.0.0"
-)
 
 app.add_middleware(
     CORSMiddleware,
