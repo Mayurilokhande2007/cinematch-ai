@@ -5,6 +5,14 @@ import os
 import json
 import smtplib
 from email.message import EmailMessage
+from fastapi.responses import FileResponse
+import os
+
+@app.get("/")
+def serve_root():
+    if os.path.exists("index.html"):
+        return FileResponse("index.html")
+    return {"error": "index.html not found"}
 
 app = FastAPI(
     title="CinemaMatch AI API",
