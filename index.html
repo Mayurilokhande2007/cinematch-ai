@@ -17,7 +17,6 @@
             background-size: auto, cover;
             min-height: 100vh;
         }
-
         .glass-card {
             background: rgba(10, 25, 49, 0.85);
             backdrop-filter: blur(16px);
@@ -31,7 +30,6 @@
             box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 180, 216, 0.6); }
-
         .ai-gradient-text {
             font-family: 'Kaushan Script', cursive;
             background-clip: text;
@@ -41,7 +39,6 @@
             display: inline-block;
             padding-right: 5px;
         }
-
         @keyframes popUp {
             0% { opacity: 0; transform: translate(-50%, -40%) scale(0.8); }
             100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -63,7 +60,6 @@
     </style>
 </head>
 <body class="bg-blended-gradient">
-
     <!-- Splash Screen -->
     <div id="page-splash" class="fixed inset-0 bg-black z-50 flex items-center justify-center">
         <div class="splash-anim">
@@ -96,10 +92,8 @@
             </div>
         </div>
     </div>
-
     <!-- Auth / Reset Container -->
     <div id="auth-container" class="hidden min-h-screen items-center justify-center p-4 bg-blended-gradient"></div>
-
     <!-- Main Dashboard Container -->
     <div id="app" class="hidden flex h-screen overflow-hidden bg-blended-gradient">
         <aside id="sidebar" class="w-64 glass-card border-r border-gray-800 p-5 flex flex-col justify-between hidden md:flex">
@@ -130,23 +124,19 @@
             </div>
             <button onclick="logout()" class="w-full py-2 bg-red-600/20 text-red-300 border border-red-500/30 rounded-lg hover:bg-red-600/30 transition">🚪 Logout</button>
         </aside>
-
         <main class="flex-1 overflow-y-auto p-8" id="main-content"></main>
     </div>
-
     <script>
         let moviesData = {};
         let currentUser = localStorage.getItem('cinematch_user') || "Mayuri";
         let watchlist = [];
         let chatMessages = [];
         let authMode = 'login';
-
         async function init() {
             try {
                 let res = await fetch('/api/movies');
                 moviesData = await res.json();
             } catch (e) { console.error("Could not fetch movies", e); }
-
             setTimeout(() => {
                 let splash = document.getElementById('page-splash');
                 splash.style.transition = 'opacity 0.7s ease';
@@ -154,11 +144,9 @@
                 setTimeout(() => {
                     splash.style.display = 'none';
                     document.body.style.overflow = 'auto';
-
                     // Check if URL is a password reset link
                     const urlParams = new URLSearchParams(window.location.search);
                     const resetUser = urlParams.get('user');
-
                     if (resetUser) {
                         showResetPasswordScreen(resetUser);
                     } else {
@@ -172,12 +160,10 @@
                 }, 700);
             }, 3800);
         }
-
         function setAuthMode(mode) {
             authMode = mode;
             showAuth();
         }
-
         function showAuth() {
             let auth = document.getElementById('auth-container');
             auth.style.display = 'flex';
@@ -185,7 +171,6 @@
             let isLogin = authMode === 'login';
             let isSignup = authMode === 'signup';
             let isForgot = authMode === 'forgot';
-
             auth.innerHTML = `
                 <div class="glass-card p-8 w-full max-w-md">
                     <!-- Uncropped Logo Container -->
@@ -214,21 +199,18 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Tabs -->
                     <div class="flex bg-black/40 p-1 rounded-lg mb-6 text-sm font-semibold">
                         <button onclick="setAuthMode('login')" class="flex-1 py-2 rounded-md transition ${isLogin ? 'bg-[#0077B6] text-white' : 'text-gray-400 hover:text-white'}">Login</button>
                         <button onclick="setAuthMode('signup')" class="flex-1 py-2 rounded-md transition ${isSignup ? 'bg-[#0077B6] text-white' : 'text-gray-400 hover:text-white'}">Sign Up</button>
                         <button onclick="setAuthMode('forgot')" class="flex-1 py-2 rounded-md transition ${isForgot ? 'bg-[#0077B6] text-white' : 'text-gray-400 hover:text-white'}">Forgot</button>
                     </div>
-
                     <!-- Inputs -->
                     <div class="space-y-3">
                         <div>
                             <label class="block text-xs text-gray-300 mb-1">${isSignup ? 'Username' : 'Username, Email or Phone'}</label>
                             <input type="text" id="userInput" placeholder="${isSignup ? 'e.g., Mayuri' : 'Enter username or phone'}" class="w-full px-4 py-2.5 rounded-lg bg-white text-black font-semibold focus:outline-none">
                         </div>
-
                         ${isSignup ? `
                         <div>
                             <label class="block text-xs text-gray-300 mb-1">Email Address</label>
@@ -254,13 +236,10 @@
                             </div>
                         </div>
                         ` : ''}
-
                         <p id="authError" class="text-red-400 text-xs text-center hidden"></p>
-
                         <button onclick="submitAuth()" class="w-full py-3 btn-primary mt-2">
                             ${isLogin ? 'Sign In' : isSignup ? 'Create Account' : 'Send Reset Link'}
                         </button>
-
                         <button onclick="handleGuest()" class="w-full py-2.5 bg-white/10 rounded-lg hover:bg-white/20 transition text-sm text-gray-300">
                             Continue as Guest
                         </button>
@@ -268,12 +247,10 @@
                 </div>
             `;
         }
-
         // Interface for updating password via the email link
         function showResetPasswordScreen(usernameOrEmail) {
             let auth = document.getElementById('auth-container');
             auth.style.display = 'flex';
-
             auth.innerHTML = `
                 <div class="glass-card p-8 w-full max-w-md">
                     <div class="flex flex-col items-center mb-6">
@@ -291,20 +268,17 @@
                 </div>
             `;
         }
-
         async function submitNewPassword(identifier) {
             let newPass = document.getElementById('newPasswordInput').value.trim();
             let errEl = document.getElementById('resetError');
             errEl.classList.add('hidden');
-
             if (!newPass) {
                 errEl.innerText = "Please enter a new password.";
                 errEl.classList.remove('hidden');
                 return;
             }
-
             try {
-                let res = await fetch('/api/login'), {
+                let res = await fetch('/api/reset-password', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({identifier: identifier, new_password: newPass})
@@ -322,17 +296,14 @@
                 errEl.classList.remove('hidden');
             }
         }
-
         function togglePassword() {
             let passInput = document.getElementById('passwordInput');
             passInput.type = passInput.type === 'password' ? 'text' : 'password';
         }
-
         async function submitAuth() {
             let errEl = document.getElementById('authError');
             errEl.classList.add('hidden');
             let val = document.getElementById('userInput').value.trim();
-
             if (authMode === 'signup') {
                 let email = document.getElementById('emailInput').value.trim();
                 let phone = document.getElementById('phoneInput').value.trim();
@@ -343,9 +314,8 @@
                     errEl.classList.remove('hidden');
                     return;
                 }
-
                 try {
-                    let res = await fetch('http://127.0.0.1:8000/api/signup', {
+                    let res = await fetch('/api/signup', {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({username: val, email: email, phone: phone, password: pass})
                     });
@@ -358,7 +328,6 @@
                         errEl.classList.remove('hidden');
                     }
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
-
             } else if (authMode === 'login') {
                 let pass = document.getElementById('passwordInput').value.trim();
                 if (!val || !pass) {
@@ -366,9 +335,8 @@
                     errEl.classList.remove('hidden');
                     return;
                 }
-
                 try {
-                    let res = await fetch('http://127.0.0.1:8000/api/login', {
+                    let res = await fetch('/api/login', {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({identifier: val, password: pass})
                     });
@@ -380,7 +348,6 @@
                         errEl.classList.remove('hidden');
                     }
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
-
             } else if (authMode === 'forgot') {
                 if (!val) {
                     errEl.innerText = "Please enter your registered email or phone.";
@@ -388,7 +355,7 @@
                     return;
                 }
                 try {
-                    let res = await fetch('http://127.0.0.1:8000/api/forgot', {
+                    let res = await fetch('/api/forgot', {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({identifier: val})
                     });
@@ -407,11 +374,9 @@
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
             }
         }
-
         function handleGuest() {
             handleLogin("Mayuri");
         }
-
         function handleLogin(name) {
             currentUser = name;
             localStorage.setItem('cinematch_user', currentUser);
@@ -420,7 +385,6 @@
             document.getElementById('app').classList.remove('hidden');
             navigateTo('home');
         }
-
         function navigateTo(page) {
             const content = document.getElementById('main-content');
             if (page === 'home') {
@@ -496,7 +460,6 @@
                 content.innerHTML = `<h2 class="text-3xl font-bold mb-4">${page.toUpperCase()}</h2><p class="text-gray-400">Module under active development.</p>`;
             }
         }
-
         function addToWatchlist(movie) {
             if(!watchlist.includes(movie)) { watchlist.push(movie); alert(`Added ${movie} to Watchlist!`); }
         }
@@ -504,7 +467,6 @@
             watchlist = watchlist.filter(m => m !== movie);
             navigateTo('watchlist');
         }
-
         async function sendChat() {
             let input = document.getElementById('chatInput');
             let prompt = input.value.trim();
@@ -512,8 +474,7 @@
             chatMessages.push({role: 'user', content: prompt});
             input.value = '';
             navigateTo('chat');
-
-            let res = await fetch('http://127.0.0.1:8000/api/chat', {
+            let res = await fetch('/api/chat', {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({prompt: prompt})
             });
@@ -521,12 +482,10 @@
             chatMessages.push({role: 'assistant', content: data.response});
             navigateTo('chat');
         }
-
         function logout() {
             localStorage.removeItem('cinematch_user');
             location.reload();
         }
-
         window.onload = init;
     </script>
 </body>
