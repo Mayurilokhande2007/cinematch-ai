@@ -37,6 +37,22 @@ def save_users(users):
     with open(USER_FILE, "w") as f:
         json.dump(users, f, indent=4)
 
+def find_user_key_or_obj(users, identifier):
+    """Helper to find user in dict or list by username, email, or phone"""
+    if not identifier:
+        return None
+    if isinstance(users, dict):
+        if identifier in users:
+            return identifier
+        for k, v in users.items():
+            if k == identifier or (isinstance(v, dict) and (v.get("email") == identifier or v.get("phone") == identifier)):
+                return k
+    elif isinstance(users, list):
+        for u in users:
+            if u.get("username") == identifier or u.get("email") == identifier or u.get("phone") == identifier:
+                return u
+    return None
+
 @app.get("/")
 def serve_root():
     if os.path.exists("index.html"):
@@ -79,15 +95,15 @@ def signup(data: dict = Body(...)):
     if not username or not password:
         raise HTTPException(status_code=400, detail="Username and password required")
     
+    if find_user_key_or_obj(users, username) or (email and find_user_key_or_obj(users, email)):
+        raise HTTPException(status_code=400, detail="User already exists")
+    
     if isinstance(users, dict):
-        if username in users:
-            raise HTTPException(status_code=400, detail="User already exists")
         users[username] = {"password": password, "email": email, "phone": phone}
     elif isinstance(users, list):
-        for u in users:
-            if u.get("username") == username:
-                raise HTTPException(status_code=400, detail="User already exists")
         users.append({"username": username, "email": email, "phone": phone, "password": password})
+    else:
+        users = {username: {"password": password, "email": email, "phone": phone}}
         
     save_users(users)
     return {"message": "Signup successful"}
@@ -98,39 +114,28 @@ def login(data: dict = Body(...)):
     identifier = data.get("identifier")
     password = data.get("password")
     
-    if isinstance(users, dict):
-        if identifier not in users or users[identifier].get("password") != password:
-            raise HTTPException(status_code=400, detail="Invalid credentials")
-    elif isinstance(users, list):
-        valid = False
-        for u in users:
-            if (u.get("username") == identifier or u.get("email") == identifier or u.get("phone") == identifier) and u.get("password") == password:
-                valid = True
-                break
-        if not valid:
-            raise HTTPException(status_code=400, detail="Invalid credentials")
-            
-    return {"message": "Login successful", "username": identifier}
+    user_key = find_user_key_or_obj(users, identifier)
+    if not user_key:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+        
+    stored_pass = users[user_key].get("password") if isinstance(users, dict) else user_key.get("password")
+    if stored_pass != password:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+        
+    actual_username = user_key if isinstance(users, dict) else user_key.get("username", identifier)
+    return {"message": "Login successful", "username": actual_username}
 
 @app.post("/api/forgot")
 def forgot_password(data: dict = Body(...)):
     identifier = data.get("identifier")
     users = load_users()
     
-    found = False
-    if isinstance(users, dict):
-        if identifier in users:
-            found = True
-    elif isinstance(users, list):
-        for u in users:
-            if u.get("username") == identifier or u.get("email") == identifier or u.get("phone") == identifier:
-                found = True
-                break
-                
-    if not found:
+    user_key = find_user_key_or_obj(users, identifier)
+    if not user_key:
         raise HTTPException(status_code=404, detail="Not Found")
         
-    reset_link = f"https://cinematch-ai-huli.onrender.com/?user={identifier}"
+    target = user_key if isinstance(users, dict) else user_key.get("username", identifier)
+    reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target}"
     return {
         "message": "Password reset link generated successfully.",
         "reset_link": reset_link
@@ -142,21 +147,14 @@ def reset_password(data: dict = Body(...)):
     new_password = data.get("new_password")
     
     users = load_users()
-    found = False
-    
-    if isinstance(users, dict):
-        if identifier in users:
-            users[identifier]["password"] = new_password
-            found = True
-    elif isinstance(users, list):
-        for u in users:
-            if u.get("username") == identifier or u.get("email") == identifier or u.get("phone") == identifier:
-                u["password"] = new_password
-                found = True
-                break
-                
-    if not found:
+    user_key = find_user_key_or_obj(users, identifier)
+    if not user_key:
         raise HTTPException(status_code=404, detail="User not found")
+        
+    if isinstance(users, dict):
+        users[user_key]["password"] = new_password
+    else:
+        user_key["password"] = new_password
         
     save_users(users)
     return {"message": "Password updated successfully"}
