@@ -3,6 +3,9 @@ import json
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = FastAPI(
     title="CinemaMatch AI API",
@@ -52,6 +55,30 @@ def find_user_key_or_obj(users, identifier):
             if u.get("username") == identifier or u.get("email") == identifier or u.get("phone") == identifier:
                 return u
     return None
+    # Email Configuration
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SENDER_EMAIL = "lokhandemayuri811@gmail.com"       # Replace with your Gmail address
+SENDER_PASSWORD = "owaz bien latn yena"     # Replace with your 16-character Gmail App Password
+
+def send_email_via_smtp(to_email, reset_link):
+    try:
+        msg = MIMEMultipart()
+        msg["From"] = SENDER_EMAIL
+        msg["To"] = to_email
+        msg["Subject"] = "Password Reset Request - CinemaMatch AI"
+        
+        body = f"Hello,\n\nYou requested a password reset for your CinemaMatch AI account.\n\nClick the link below to reset your password:\n{reset_link}\n\nIf you did not request this, please ignore this email."
+        msg.attach(MIMEText(body, "plain"))
+        
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.sendmail(SENDER_EMAIL, to_email, msg.as_string())
+        return True
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        return False
 
 @app.get("/")
 def serve_root():
@@ -132,15 +159,24 @@ def forgot_password(data: dict = Body(...)):
     
     user_key = find_user_key_or_obj(users, identifier)
     if not user_key:
-        raise HTTPException(status_code=404, detail="Not Found")
+        raise HTTPException(status_code=404, detail="User not found")
         
-    target = user_key if isinstance(users, dict) else user_key.get("username", identifier)
+    user_data = users[user_key] if isinstance(users, dict) else user_key
+    user_email = user_data.get("email")
+    target_username = user_data.get("username") or user_key
     
-    # Explicitly force the live Render domain
-    reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target}"
+    if not user_email:
+        raise HTTPException(status_code=400, detail="No email address associated with this account")
+        
+    reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target_username}"
+    
+    # Send the email directly to the user's inbox
+    email_sent = send_email_via_smtp(user_email, reset_link)
+    if not email_sent:
+        raise HTTPException(status_code=500, detail="Failed to send email. Check SMTP server configuration.")
+        
     return {
-        "message": "Password reset link generated successfully.",
-        "reset_link": reset_link
+        "message": f"Password reset link has been successfully sent to {user_email}."
     }
 
 @app.post("/api/reset-password")
