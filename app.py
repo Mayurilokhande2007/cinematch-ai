@@ -135,6 +135,8 @@ def forgot_password(data: dict = Body(...)):
         raise HTTPException(status_code=404, detail="Not Found")
         
     target = user_key if isinstance(users, dict) else user_key.get("username", identifier)
+    
+    # Explicitly force the live Render domain
     reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target}"
     return {
         "message": "Password reset link generated successfully.",
