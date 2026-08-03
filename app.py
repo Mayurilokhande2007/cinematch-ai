@@ -20,7 +20,7 @@ app.add_middleware(
 )
 
 USER_FILE = "users.json"
-resend.api_key = "re_YourResendApiKeyHere"  # <--- Make sure to replace this with your actual Resend API key!
+resend.api_key = "os.environ.get("RESEND_API_KEY")"  # <--- Make sure to replace this with your actual Resend API key!
 
 def load_users():
     if os.path.exists(USER_FILE):
