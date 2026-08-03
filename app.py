@@ -3,9 +3,6 @@ import json
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import resend
 
 app = FastAPI(
@@ -23,7 +20,7 @@ app.add_middleware(
 )
 
 USER_FILE = "users.json"
-resend.api_key = "re_YourResendApiKeyHere"  # Replace with your actual Resend API key
+resend.api_key = "re_YourResendApiKeyHere"  # <--- Make sure to replace this with your actual Resend API key!
 
 def load_users():
     if os.path.exists(USER_FILE):
@@ -50,37 +47,13 @@ def find_user_key_or_obj(users, identifier):
         if identifier in users:
             return identifier
         for k, v in users.items():
-            if k == identifier or (isinstance(v, dict) and (v.get("email") == identifier or v.get("phone") == identifier)):
+            if k == identifier or (isinstance(v, dict) and (v.get("email") == identifier or v.get("phone") == identifier or v.get("username") == identifier)):
                 return k
     elif isinstance(users, list):
         for u in users:
             if u.get("username") == identifier or u.get("email") == identifier or u.get("phone") == identifier:
                 return u
     return None
-    # Email Configuration
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-SENDER_EMAIL = "lokhandemayuri811@gmail.com"       # Replace with your Gmail address
-SENDER_PASSWORD = "owaz bien latn yena"     # Replace with your 16-character Gmail App Password
-
-def send_email_via_smtp(to_email, reset_link):
-    try:
-        msg = MIMEMultipart()
-        msg["From"] = SENDER_EMAIL
-        msg["To"] = to_email
-        msg["Subject"] = "Password Reset Request - CinemaMatch AI"
-        
-        body = f"Hello,\n\nYou requested a password reset for your CinemaMatch AI account.\n\nClick the link below to reset your password:\n{reset_link}\n\nIf you did not request this, please ignore this email."
-        msg.attach(MIMEText(body, "plain"))
-        
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SENDER_EMAIL, SENDER_PASSWORD)
-            server.sendmail(SENDER_EMAIL, to_email, msg.as_string())
-        return True
-    except Exception as e:
-        print(f"Failed to send email: {e}")
-        return False
 
 @app.get("/")
 def serve_root():
