@@ -165,31 +165,3 @@ def forgot_password(data: dict = Body(...)):
     return {
         "message": f"Password reset link has been successfully sent to {user_email}."
     }
-
-@app.post("/api/reset-password")
-def reset_password(data: dict = Body(...)):
-    identifier = data.get("identifier")
-    new_password = data.get("new_password")
-    
-    users = load_users()
-    user_key = find_user_key_or_obj(users, identifier)
-    if not user_key:
-        raise HTTPException(status_code=404, detail="User not found")
-        
-    if isinstance(users, dict):
-        users[user_key]["password"] = new_password
-    else:
-        user_key["password"] = new_password
-        
-    save_users(users)
-    return {"message": "Password updated successfully"}
-
-@app.post("/api/chat")
-def chat(data: dict = Body(...)):
-    prompt = data.get("prompt", "").lower()
-    response = "That sounds like a great movie choice! I recommend checking out Inception or Interstellar for an incredible sci-fi experience."
-    if "action" in prompt:
-        response = "For high-octane action, The Dark Knight or Avengers: Endgame are top choices!"
-    elif "sci-fi" in prompt:
-        response = "Interstellar and Inception are mind-bending masterpieces you will love."
-    return {"response": response}
