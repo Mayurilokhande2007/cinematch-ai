@@ -348,31 +348,27 @@
                         errEl.classList.remove('hidden');
                     }
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
-            } else if (authMode === 'forgot') {
-                if (!val) {
-                    errEl.innerText = "Please enter your registered email or phone.";
-                    errEl.classList.remove('hidden');
-                    return;
-                }
-                try {
-                    let res = await fetch('/api/forgot', {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({identifier: val})
-                    });
-                    let data = await res.json();
-                    if (res.ok) {
-                        let msg = data.message;
-                        if(data.reset_link) {
-                            msg += `\n\n(Fallback Link):\n${data.reset_link}`;
-                        }
-                        alert(msg);
-                        setAuthMode('login');
-                    } else {
-                        errEl.innerText = data.detail;
-                        errEl.classList.remove('hidden');
-                    }
-                } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
-            }
+           } else if (authMode === 'forgot') {
+    if (!val) {
+        errEl.innerText = "Please enter your registered email or phone.";
+        errEl.classList.remove('hidden');
+        return;
+    }
+    try {
+        let res = await fetch('/api/forgot', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({identifier: val})
+        });
+        let data = await res.json();
+        if (res.ok) {
+            alert(data.message); // Clean success notification
+            setAuthMode('login');
+        } else {
+            errEl.innerText = data.detail;
+            errEl.classList.remove('hidden');
+        }
+    } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
+}
         }
         function handleGuest() {
             handleLogin("Mayuri");
