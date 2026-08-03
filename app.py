@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import resend
 
 app = FastAPI(
     title="CinemaMatch AI API",
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 USER_FILE = "users.json"
+resend.api_key = "re_YourResendApiKeyHere"  # Replace with your actual Resend API key
 
 def load_users():
     if os.path.exists(USER_FILE):
@@ -170,10 +172,22 @@ def forgot_password(data: dict = Body(...)):
         
     reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target_username}"
     
-    # Send the email directly to the user's inbox
-    email_sent = send_email_via_smtp(user_email, reset_link)
-    if not email_sent:
-        raise HTTPException(status_code=500, detail="Failed to send email. Check SMTP server configuration.")
+    try:
+        params = {
+            "from": "CinemaMatch AI <onboarding@resend.dev>",
+            "to": [user_email],
+            "subject": "Password Reset Request - CinemaMatch AI",
+            "html": f"""
+                <p>Hello,</p>
+                <p>You requested a password reset for your CinemaMatch AI account.</p>
+                <p><a href="{reset_link}" style="padding: 10px 15px; background: #0084ff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
+                <p>If you did not request this, please ignore this email.</p>
+            """
+        }
+        resend.Emails.send(params)
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send email via Resend.")
         
     return {
         "message": f"Password reset link has been successfully sent to {user_email}."
