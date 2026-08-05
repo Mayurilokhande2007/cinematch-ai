@@ -1,8 +1,6 @@
 import os
 import json
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import requests
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -71,6 +69,18 @@ def get_movies():
         "The Dark Knight": {
             "poster": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
             "desc": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham."
+        },
+        "Interstellar": {
+            "poster": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+            "desc": "Explorers travel through a wormhole in space to ensure humanity's survival."
+        },
+        "Avatar": {
+            "poster": "https://image.tmdb.org/t/p/w500/kyeOwessWXUXSoHNECAb4r5hRRE.jpg",
+            "desc": "A paraplegic marine dispatched to the moon Pandora on a unique mission."
+        },
+        "Avengers: Endgame": {
+            "poster": "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+            "desc": "After the devastating events of Infinity War, the universe is in ruins."
         }
     }
 
@@ -133,34 +143,23 @@ def forgot_password(data: dict = Body(...)):
         
     reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target_username}"
     
-    # Use your Gmail address here
-    sender_email = "lokhandemayuri811@gmail.com"
-    app_password = os.environ.get("GMAIL_APP_PASSWORD")
-    
-    if not app_password:
-        raise HTTPException(status_code=500, detail="Server email not configured.")
+    script_url = os.environ.get("GOOGLE_SCRIPT_URL")
+    if not script_url:
+        raise HTTPException(status_code=500, detail="Google Script URL not configured on server.")
         
-    message = MIMEMultipart("alternative")
-    message["Subject"] = "Password Reset Request - CinemaMatch AI"
-    message["From"] = f"CinemaMatch AI <{sender_email}>"
-    message["To"] = user_email
-    
-    html_content = f"""
-        <p>Hello,</p>
-        <p>You requested a password reset for your CinemaMatch AI account.</p>
-        <p><a href="{reset_link}" style="padding: 10px 15px; background: #0084ff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
-        <p>If you did not request this, please ignore this email.</p>
-    """
-    message.attach(MIMEText(html_content, "html"))
+    payload = {
+        "to": user_email,
+        "subject": "Password Reset Request - CinemaMatch AI",
+        "html": f'<p>Hello,</p><p>You requested a password reset for your CinemaMatch AI account.</p><br><p><a href="{reset_link}" style="padding: 10px 15px; background: #0084ff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p><br><p>If you did not request this, please ignore this email.</p>'
+    }
     
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login(sender_email, app_password)
-            server.sendmail(sender_email, user_email, message.as_string())
+        response = requests.post(script_url, json=payload)
+        if response.status_code != 200:
+            raise HTTPException(status_code=500, detail="Failed to send email via Google.")
     except Exception as e:
-        print(f"SMTP error: {e}")
-        raise HTTPException(status_code=500, detail="Failed to send email via Gmail SMTP.")
+        print(f"Request error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to connect to Google API.")
         
     return {
         "message": f"Password reset link has been successfully sent to {user_email}."
