@@ -1,9 +1,11 @@
 import os
 import json
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-import resend
 
 app = FastAPI(
     title="CinemaMatch AI API",
@@ -20,7 +22,6 @@ app.add_middleware(
 )
 
 USER_FILE = "users.json"
-resend.api_key = os.environ.get("RESEND_API_KEY") 
 
 def load_users():
     if os.path.exists(USER_FILE):
@@ -40,7 +41,6 @@ def save_users(users):
         json.dump(users, f, indent=4)
 
 def find_user_key_or_obj(users, identifier):
-    """Helper to find user in dict or list by username, email, or phone"""
     if not identifier:
         return None
     if isinstance(users, dict):
@@ -71,18 +71,6 @@ def get_movies():
         "The Dark Knight": {
             "poster": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
             "desc": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham."
-        },
-        "Interstellar": {
-            "poster": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-            "desc": "Explorers travel through a wormhole in space to ensure humanity's survival."
-        },
-        "Avatar": {
-            "poster": "https://image.tmdb.org/t/p/w500/kyeOwessWXUXSoHNECAb4r5hRRE.jpg",
-            "desc": "A paraplegic marine dispatched to the moon Pandora on a unique mission."
-        },
-        "Avengers: Endgame": {
-            "poster": "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-            "desc": "After the devastating events of Infinity War, the universe is in ruins."
         }
     }
 
@@ -145,22 +133,34 @@ def forgot_password(data: dict = Body(...)):
         
     reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target_username}"
     
+    # Use your Gmail address here
+    sender_email = "lokhandemayuri811@gmail.com"
+    app_password = os.environ.get("GMAIL_APP_PASSWORD")
+    
+    if not app_password:
+        raise HTTPException(status_code=500, detail="Server email not configured.")
+        
+    message = MIMEMultipart("alternative")
+    message["Subject"] = "Password Reset Request - CinemaMatch AI"
+    message["From"] = f"CinemaMatch AI <{sender_email}>"
+    message["To"] = user_email
+    
+    html_content = f"""
+        <p>Hello,</p>
+        <p>You requested a password reset for your CinemaMatch AI account.</p>
+        <p><a href="{reset_link}" style="padding: 10px 15px; background: #0084ff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
+        <p>If you did not request this, please ignore this email.</p>
+    """
+    message.attach(MIMEText(html_content, "html"))
+    
     try:
-        params = {
-            "from": "CinemaMatch AI <onboarding@resend.dev>",
-            "to": [user_email],
-            "subject": "Password Reset Request - CinemaMatch AI",
-            "html": f"""
-                <p>Hello,</p>
-                <p>You requested a password reset for your CinemaMatch AI account.</p>
-                <p><a href="{reset_link}" style="padding: 10px 15px; background: #0084ff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
-                <p>If you did not request this, please ignore this email.</p>
-            """
-        }
-        resend.Emails.send(params)
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, app_password)
+            server.sendmail(sender_email, user_email, message.as_string())
     except Exception as e:
-        print(f"Failed to send email: {e}")
-        raise HTTPException(status_code=500, detail="Failed to send email via Resend.")
+        print(f"SMTP error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send email via Gmail SMTP.")
         
     return {
         "message": f"Password reset link has been successfully sent to {user_email}."
@@ -180,7 +180,6 @@ def reset_password(data: dict = Body(...)):
     if not user_key:
         raise HTTPException(status_code=404, detail="User not found")
         
-    # Update password in dictionary or list format
     if isinstance(users, dict):
         users[user_key]["password"] = new_password
     elif isinstance(users, list):
