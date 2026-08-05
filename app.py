@@ -1,9 +1,9 @@
 import os
 import json
+import requests
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-import resend
 
 app = FastAPI(
     title="CinemaMatch AI API",
@@ -20,7 +20,6 @@ app.add_middleware(
 )
 
 USER_FILE = "users.json"
-resend.api_key = os.environ.get("RESEND_API_KEY") 
 
 def load_users():
     if os.path.exists(USER_FILE):
@@ -145,22 +144,32 @@ def forgot_password(data: dict = Body(...)):
         
     reset_link = f"https://cinematch-ai-huli.onrender.com/?user={target_username}"
     
+    url = "https://api.brevo.com/v3/smtp/email"
+    payload = {
+        "sender": {"name": "CinemaMatch AI", "email": "lokhandemayuri811@gmail.com"},
+        "to": [{"email": user_email}],
+        "subject": "Password Reset Request - CinemaMatch AI",
+        "htmlContent": f"""
+            <p>Hello,</p>
+            <p>You requested a password reset for your CinemaMatch AI account.</p>
+            <p><a href="{reset_link}" style="padding: 10px 15px; background: #0084ff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
+            <p>If you did not request this, please ignore this email.</p>
+        """
+    }
+    headers = {
+        "accept": "application/json",
+        "api-key": os.environ.get("BREVO_API_KEY"),
+        "content-type": "application/json"
+    }
+    
     try:
-        params = {
-            "from": "CinemaMatch AI <onboarding@resend.dev>",
-            "to": [user_email],
-            "subject": "Password Reset Request - CinemaMatch AI",
-            "html": f"""
-                <p>Hello,</p>
-                <p>You requested a password reset for your CinemaMatch AI account.</p>
-                <p><a href="{reset_link}" style="padding: 10px 15px; background: #0084ff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
-                <p>If you did not request this, please ignore this email.</p>
-            """
-        }
-        resend.Emails.send(params)
+        response = requests.post(url, json=payload, headers=headers)
+        if response.status_code not in [200, 201]:
+            print(f"Brevo error: {response.text}")
+            raise HTTPException(status_code=500, detail="Failed to send email via Brevo.")
     except Exception as e:
         print(f"Failed to send email: {e}")
-        raise HTTPException(status_code=500, detail="Failed to send email via Resend.")
+        raise HTTPException(status_code=500, detail="Failed to send email via Brevo.")
         
     return {
         "message": f"Password reset link has been successfully sent to {user_email}."
