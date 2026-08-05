@@ -174,3 +174,28 @@ def forgot_password(data: dict = Body(...)):
     return {
         "message": f"Password reset link has been successfully sent to {user_email}."
     }
+@app.post("/api/reset-password")
+def reset_password(data: dict = Body(...)):
+    username = data.get("username")
+    new_password = data.get("new_password")
+    
+    if not username or not new_password:
+        raise HTTPException(status_code=400, detail="Username and new password required")
+        
+    users = load_users()
+    user_key = find_user_key_or_obj(users, username)
+    
+    if not user_key:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    # Update password in dictionary or list format
+    if isinstance(users, dict):
+        users[user_key]["password"] = new_password
+    elif isinstance(users, list):
+        for u in users:
+            if u.get("username") == username or u.get("email") == username:
+                u["password"] = new_password
+                break
+                
+    save_users(users)
+    return {"message": "Password updated successfully! You can now log in."}
