@@ -281,7 +281,7 @@
                 let res = await fetch('/api/reset-password', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({identifier: identifier, new_password: newPass})
+                    body: JSON.stringify({username: identifier, new_password: newPass})
                 });
                 let data = await res.json();
                 if (res.ok) {
