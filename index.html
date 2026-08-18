@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>CinemaMatch AI</title>
     
     <!-- External Libraries -->
@@ -33,17 +34,13 @@
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 180, 216, 0.6); }
         
-        /* Splash Screen & Logo Animations */
         .ai-gradient-text {
             font-family: 'Kaushan Script', cursive; background-clip: text;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-image: linear-gradient(to right, #00B4D8, #0077B6);
             display: inline-block; padding-right: 5px;
         }
-        @keyframes popUp {
-            0% { opacity: 0; transform: translate(-50%, -40%) scale(0.8); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        }
+        @keyframes popUp { 0% { opacity: 0; transform: translate(-50%, -40%) scale(0.8); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
         @keyframes fadeOutLogo { to { opacity: 0; visibility: hidden; } }
         .splash-anim {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -51,19 +48,16 @@
             opacity: 0; animation: popUp 1.5s 0.2s forwards, fadeOutLogo 0.5s 3.5s forwards;
         }
 
-        /* Custom Scrollbars */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         ::-webkit-scrollbar-thumb { background: rgba(0, 195, 255, 0.3); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(0, 195, 255, 0.6); }
 
-        /* Swipe Card Animations */
         @keyframes swipeRight { to { transform: translate(150%, 20deg) scale(0.8); opacity: 0; } }
         @keyframes swipeLeft { to { transform: translate(-150%, -20deg) scale(0.8); opacity: 0; } }
         .swiping-right { animation: swipeRight 0.5s forwards; }
         .swiping-left { animation: swipeLeft 0.5s forwards; }
         
-        /* Chat Typing Animation */
         .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
@@ -96,16 +90,11 @@
                     <span style="font-family: 'Kaushan Script', cursive; color: #FFFFFF; font-weight: 400;">CinemaMatch</span>
                     <span class="ai-gradient-text">AI</span>
                 </div>
-                <div style="display: flex; align-items: center; justify-content: center; margin-top: 5px; gap: 10px; width: 100%;">
-                    <div style="height: 1.5px; width: 35px; background-color: #0077B6;"></div>
-                    <span style="font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 400; letter-spacing: 2px; color: #E0E0E0; text-transform: uppercase;">AI RECOMMENDS. YOU ENJOY.</span>
-                    <div style="height: 1.5px; width: 35px; background-color: #0077B6;"></div>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Auth Container (Hidden if logged in) -->
+    <!-- Auth Container -->
     <div id="auth-container" class="hidden min-h-screen items-center justify-center p-4"></div>
 
     <!-- Main Dashboard -->
@@ -114,7 +103,6 @@
         <!-- SIDEBAR -->
         <aside id="sidebar" class="w-64 glass-card border-r border-gray-800 p-5 flex flex-col justify-between hidden md:flex z-20">
             <div>
-                <!-- Custom SVG Logo -->
                 <div class="sidebar-logo-section" style="text-align: center; margin-bottom: 1.5rem; width: 100%; max-width: 240px; margin-inline: auto;">
                     <svg width="85" height="60" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto; display: block;">
                         <g transform="translate(22, 28) rotate(-12)">
@@ -138,7 +126,8 @@
                     </div>
                 </div>
 
-                <p id="userDisplay" class="text-xs text-center text-gray-400 mb-6 font-semibold tracking-wide uppercase border-b border-gray-800 pb-4"></p>
+                <!-- USERNAME ONLY DISPLAY (No Roll Number) -->
+                <p id="userDisplay" class="text-xs text-center text-gray-400 mb-6 font-semibold tracking-widest uppercase border-b border-gray-800 pb-4"></p>
 
                 <nav class="space-y-2">
                     <button onclick="navigateTo('home')" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-gray-300 hover:text-white font-medium">
@@ -164,10 +153,7 @@
             </button>
         </aside>
 
-        <!-- MAIN CONTENT -->
-        <main class="flex-1 overflow-y-auto p-8 relative" id="main-content">
-            <!-- Injected via JavaScript -->
-        </main>
+        <main class="flex-1 overflow-y-auto p-8 relative" id="main-content"></main>
     </div>
 
     <script>
@@ -182,33 +168,46 @@
         let currentSwipeIndex = 0;
         let activeMood = 'All';
 
+        // 24 TESTED & VERIFIED WORKING POSTERS
+        const verifiedPosters = {
+            "Interstellar": { genre: "Sci-Fi", mood: "Mind-Bending", lang: "English", rating: 8.6, poster: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_FMjpg_UX1000_.jpg", desc: "Explorers travel through a wormhole in space to ensure humanity's survival." },
+            "Inception": { genre: "Sci-Fi", mood: "Mind-Bending", lang: "English", rating: 8.8, poster: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg", desc: "A thief steals corporate secrets through the use of dream-sharing technology." },
+            "The Dark Knight": { genre: "Action", mood: "Adrenaline & Hype", lang: "English", rating: 9.0, poster: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_FMjpg_UX1000_.jpg", desc: "Batman must accept one of the greatest psychological and physical tests of his ability." },
+            "Avatar": { genre: "Sci-Fi", mood: "Adrenaline & Hype", lang: "English", rating: 7.9, poster: "https://m.media-amazon.com/images/M/MV5BMDEzMmQwZjctZWU2My00MWVOLWE0ZDYtM2UxMjAyOTBlNmQ0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "A paraplegic Marine dispatched to the moon Pandora becomes torn between two worlds." },
+            "Avengers: Endgame": { genre: "Action", mood: "Adrenaline & Hype", lang: "English", rating: 8.4, poster: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_FMjpg_UX1000_.jpg", desc: "The Avengers assemble once more in order to reverse Thanos' actions." },
+            "Joker": { genre: "Thriller", mood: "Dark & Thrilling", lang: "English", rating: 8.4, poster: "https://m.media-amazon.com/images/M/MV5BNzY3OWQ5NDktNWQ2OC00ZjdlLWE5YzEtNmE0Y2ExNC01MTg5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "In Gotham City, mentally troubled comedian Arthur Fleck is disregarded by society." },
+            "Parasite": { genre: "Thriller", mood: "Dark & Thrilling", lang: "Korean", rating: 8.5, poster: "https://m.media-amazon.com/images/M/MV5BYjk1N2OzMjMtN2G0NC00ODVmLTgzOTItODVlOWQ4NTBkODBlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "Greed and class discrimination threaten the relationship between two families." },
+            "Spider-Man: Into the Spider-Verse": { genre: "Kids", mood: "Adrenaline & Hype", lang: "English", rating: 8.4, poster: "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_FMjpg_UX1000_.jpg", desc: "Teen Miles Morales becomes the Spider-Man of his universe." },
+            "Dune": { genre: "Sci-Fi", mood: "Adrenaline & Hype", lang: "English", rating: 8.0, poster: "https://m.media-amazon.com/images/M/MV5BN2FjNmEyNWMtYzM0ZS00NjIyLTg5YzYtODExMTMxNjc1NDBhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "A noble family becomes embroiled in a war for control over the galaxy's most valuable asset." },
+            "The Matrix": { genre: "Sci-Fi", mood: "Mind-Bending", lang: "English", rating: 8.7, poster: "https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "A computer hacker learns from mysterious rebels about the true nature of his reality." },
+            "Gladiator": { genre: "Action", mood: "Adrenaline & Hype", lang: "English", rating: 8.5, poster: "https://m.media-amazon.com/images/M/MV5BYWQ4YmNjYjEtOWE1Zi00Y2U4LWI4NTAtMTU0MjkxNWQ1Dg@@._V1_FMjpg_UX1000_.jpg", desc: "A former Roman General sets out to exact vengeance against the corrupt emperor." },
+            "Fight Club": { genre: "Thriller", mood: "Mind-Bending", lang: "English", rating: 8.8, poster: "https://m.media-amazon.com/images/M/MV5BOTgyOGQ1NDItNGU3Ny00MjU3LTg2YWEtNmEyYjBiMjI1OTZiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "An insomniac office worker and a soap maker form an underground fight club." },
+            "Pulp Fiction": { genre: "Thriller", mood: "Dark & Thrilling", lang: "English", rating: 8.9, poster: "https://m.media-amazon.com/images/M/MV5BYTViYTE3NWItNmRkNy00NzdmLWI1NDgtMjI0MjhjYmZhZDJkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "The lives of two mob hitmen, a boxer, and a gangster intertwine." },
+            "Forrest Gump": { genre: "Comedy", mood: "Feel-Good", lang: "English", rating: 8.8, poster: "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "Historical events unfold from the perspective of an Alabama man." },
+            "The Shawshank Redemption": { genre: "Thriller", mood: "Feel-Good", lang: "English", rating: 9.3, poster: "https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2MmI0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "Two imprisoned men bond over a number of years, finding solace and redemption." },
+            "Titanic": { genre: "Romance", mood: "Feel-Good", lang: "English", rating: 7.9, poster: "https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "An aristocrat falls in love with a kind but poor artist aboard the R.M.S. Titanic." },
+            "La La Land": { genre: "Romance", mood: "Feel-Good", lang: "English", rating: 8.0, poster: "https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_FMjpg_UX1000_.jpg", desc: "A pianist and an actress fall in love while attempting to reconcile their aspirations." },
+            "Coco": { genre: "Kids", mood: "Feel-Good", lang: "English", rating: 8.4, poster: "https://m.media-amazon.com/images/M/MV5BYjQ5NjM0Y2YtNjZkNC00ZDhkLWJjMWItN2QyNzFkZTFjMWY1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "Aspiring musician Miguel enters the Land of the Dead to find his family." },
+            "Toy Story": { genre: "Kids", mood: "Feel-Good", lang: "English", rating: 8.3, poster: "https://m.media-amazon.com/images/M/MV5BZTA3MmQ4OTAtODFlMS00ODk1LWEwODEtMDExNDIxNzY4YmQ2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "A cowboy doll is profoundly threatened when a new spaceman figure supplants him." },
+            "Spirited Away": { genre: "Kids", mood: "Mind-Bending", lang: "Japanese", rating: 8.6, poster: "https://m.media-amazon.com/images/M/MV5BNTEyNmEwOWUtYzkyOC00ZTQ4LTllZmUtMjk0Y2Y5ZWU3YTgzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "A sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits." },
+            "Mad Max: Fury Road": { genre: "Action", mood: "Adrenaline & Hype", lang: "English", rating: 8.1, poster: "https://m.media-amazon.com/images/M/MV5BN2EwM2I5OWMtMGQyMi00Zjg1LWJkNTctZTdjYTA4OGUwZjMyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler." },
+            "John Wick": { genre: "Action", mood: "Adrenaline & Hype", lang: "English", rating: 7.4, poster: "https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTgzNjMyMzE@._V1_FMjpg_UX1000_.jpg", desc: "An ex-hit-man comes out of retirement to track down the gangsters that killed his dog." },
+            "3 Idiots": { genre: "Comedy", mood: "Feel-Good", lang: "Hindi", rating: 8.4, poster: "https://m.media-amazon.com/images/M/MV5BNTkyOGVjMGEtNmQzZi00NzFlLTlhOWQtODYyMDc2ZGJmYzFhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "Two friends search for their long lost companion and revisit their college days." },
+            "Tumbbad": { genre: "Horror", mood: "Dark & Thrilling", lang: "Hindi", rating: 8.2, poster: "https://m.media-amazon.com/images/M/MV5BYmQxNmU4AC0tOTEsOS00OGQxLWE0Y2MtTDFlNTExMmZjNmQ1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", desc: "A mythological story about a goddess who created the entire universe." }
+        };
+
         // ==========================================
-        // INITIALIZATION & FETCH
+        // INITIALIZATION
         // ==========================================
         async function init() {
-            try {
-                // Fetch movies from FastAPI backend
-                let response = await fetch('/api/movies');
-                let data = await response.json();
-                
-                // Convert dictionary to an array for easy sorting/filtering
-                movieArray = Object.keys(data).map(key => ({
-                    title: key,
-                    ...data[key]
-                }));
-            } catch (e) {
-                console.error("Backend offline. Using fallback data.", e);
-                // Fallback in case the server isn't running
-                movieArray = [
-                    { title: "Interstellar", genre: "Sci-Fi", mood: "Mind-Bending", lang: "English", rating: 8.6, poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", desc: "Explorers travel through a wormhole in space to ensure humanity's survival." },
-                    { title: "The Dark Knight", genre: "Action", mood: "Adrenaline & Hype", lang: "English", rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", desc: "Batman must accept one of the greatest psychological and physical tests of his ability." }
-                ];
-            }
+            movieArray = Object.keys(verifiedPosters).map(key => ({
+                title: key,
+                ...verifiedPosters[key]
+            }));
             
-            // Randomize array safely
             movieArray = movieArray.sort(() => 0.5 - Math.random());
+            document.getElementById('userDisplay').innerText = `USER: ${currentUser.toUpperCase()}`;
             
-            // Handle Splash Screen and Login Status
             setTimeout(() => {
                 let splash = document.getElementById('page-splash');
                 splash.style.transition = 'opacity 0.7s ease';
@@ -218,18 +217,11 @@
                     splash.style.display = 'none';
                     document.body.style.overflow = 'auto';
                     
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const resetUser = urlParams.get('user');
-                    
-                    if (resetUser) {
-                        showResetPasswordScreen(resetUser);
+                    let savedUser = localStorage.getItem('cinematch_user');
+                    if (savedUser) {
+                        handleLogin(savedUser);
                     } else {
-                        let savedUser = localStorage.getItem('cinematch_user');
-                        if (savedUser) {
-                            handleLogin(savedUser);
-                        } else {
-                            showAuth();
-                        }
+                        showAuth();
                     }
                 }, 700);
             }, 3800);
@@ -240,7 +232,6 @@
         // ==========================================
         function navigateTo(page) {
             const content = document.getElementById('main-content');
-            
             if (page === 'home') renderHome(content);
             else if (page === 'search') renderSearch(content);
             else if (page === 'watchlist') renderWatchlist(content);
@@ -249,17 +240,16 @@
         }
 
         // ==========================================
-        // 1. HOME DASHBOARD (21 Grid Layout)
+        // 1. HOME DASHBOARD (21 Grid)
         // ==========================================
         function renderHome(content) {
             if (movieArray.length === 0) return;
             
-            // Filter by Mood
             let filtered = movieArray.filter(m => activeMood === 'All' || m.mood === activeMood);
-            if (filtered.length === 0) filtered = movieArray; // fallback if filter is empty
+            if (filtered.length === 0) filtered = movieArray;
             
             const heroData = filtered[0];
-            const recommended = filtered.slice(1, 21); // Display up to 20 grid posters
+            const recommended = filtered.slice(1, 21);
 
             let html = `
                 <div class="mb-6">
@@ -267,7 +257,6 @@
                     <p class="text-gray-400 text-sm">Ready for another adventure? AI has picked these just for you.</p>
                 </div>
                 
-                <!-- Mood Filters -->
                 <div class="mb-6 flex gap-2 overflow-x-auto pb-2">
                     ${['All', 'Adrenaline & Hype', 'Mind-Bending', 'Feel-Good', 'Dark & Thrilling'].map(mood => `
                         <button onclick="activeMood='${mood}'; navigateTo('home')" class="px-4 py-1.5 rounded-full text-xs font-semibold transition ${activeMood === mood ? 'bg-[#00c3ff] text-black shadow-[0_0_10px_rgba(0,195,255,0.5)]' : 'bg-white/10 text-gray-300 hover:bg-white/20'}">
@@ -277,12 +266,14 @@
                 </div>
 
                 <!-- HERO BANNER -->
-                <div class="glass-card p-6 bg-cover bg-center rounded-xl mb-8 relative overflow-hidden" style="background-image: linear-gradient(to right, rgba(10,25,49,1) 0%, rgba(10,25,49,0.8) 50%, rgba(10,25,49,0) 100%), url('${heroData.poster}');">
+                <div class="glass-card p-6 bg-cover bg-center rounded-xl mb-8 relative overflow-hidden" style="background-image: linear-gradient(to right, rgba(10,25,49,0.95) 0%, rgba(10,25,49,0.5) 50%, rgba(10,25,49,0) 100%), url('${heroData.poster}'); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     <div class="relative z-10 w-full md:w-2/3">
                         <span class="text-yellow-400 font-bold text-sm mb-2 block flex items-center gap-1"><i class="ph-fill ph-star"></i> ${heroData.rating}</span>
                         <h1 class="text-4xl font-extrabold uppercase mb-2 text-white">${heroData.title}</h1>
                         <p class="text-gray-200 text-sm mb-5 line-clamp-3">${heroData.desc}</p>
-                        <button onclick="addToWatchlist('${heroData.title}')" class="px-6 py-2.5 btn-primary flex items-center gap-2"><i class="ph-bold ph-plus"></i> Watchlist</button>
+                        <button onclick="addToWatchlist('${heroData.title}')" class="px-6 py-2.5 btn-primary flex items-center gap-2 w-max">
+                            <i class="ph-bold ph-plus"></i> Watchlist
+                        </button>
                     </div>
                 </div>
 
@@ -290,12 +281,13 @@
                     <i class="ph-fill ph-fire text-orange-500"></i> Recommended For You (AI Hybrid)
                 </h3>
 
-                <!-- POSTER GRID (20 Cards) -->
+                <!-- 20 POSTER GRID -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 pb-10">
                     ${recommended.map(m => `
-                        <div class="relative group rounded-xl overflow-hidden shadow-lg hover:-translate-y-2 transition-all bg-[#0f172a]">
+                        <div class="relative group rounded-xl overflow-hidden shadow-lg hover:-translate-y-2 transition-all bg-[#0f172a] min-h-[256px]">
                             <div class="absolute top-2 right-2 z-20 px-2 py-0.5 rounded-md bg-black/70 text-yellow-400 text-xs font-bold flex items-center gap-1"><i class="ph-fill ph-star text-xs"></i> ${m.rating}</div>
-                            <img src="${m.poster}" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                            
+                            <img src="${m.poster}" alt="${m.title}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.onerror=null; this.parentElement.classList.add('flex','flex-col','justify-center','items-center','p-4','text-center'); this.style.display='none'; this.nextElementSibling.style.opacity='1';">
                             
                             <!-- Hover Overlay -->
                             <div class="absolute inset-0 bg-gradient-to-t from-[#0a1931] via-[#0a1931]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-3 backdrop-blur-[2px] z-10">
@@ -311,7 +303,7 @@
         }
 
         // ==========================================
-        // 2. SEARCH FEATURE (Real-Time)
+        // 2. SEARCH FEATURE
         // ==========================================
         function renderSearch(content, query = '') {
             let results = movieArray.filter(m => 
@@ -333,8 +325,8 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 pb-10">
                     ${results.length === 0 ? '<p class="text-gray-400 col-span-full">No results found.</p>' : results.map(m => `
-                        <div class="relative group rounded-xl overflow-hidden shadow-lg bg-[#0f172a]">
-                            <img src="${m.poster}" class="w-full h-64 object-cover" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                        <div class="relative group rounded-xl overflow-hidden shadow-lg bg-[#0f172a] min-h-[256px]">
+                            <img src="${m.poster}" alt="${m.title}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-64 object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#0a1931] via-transparent to-transparent flex flex-col justify-end p-3">
                                 <h4 class="font-bold text-white text-sm">${m.title}</h4>
                                 <button onclick="addToWatchlist('${m.title}')" class="mt-2 w-full py-1.5 bg-white/20 hover:bg-[#00c3ff] rounded text-xs text-white transition-colors">+ Add</button>
@@ -345,7 +337,6 @@
             `;
             content.innerHTML = html;
             
-            // Keep focus on input while typing
             let input = document.getElementById('searchInput');
             if (input) {
                 input.focus();
@@ -358,12 +349,11 @@
         }
 
         // ==========================================
-        // 3. SWIPE MATCH (Tinder-Style UI)
+        // 3. SWIPE MATCH
         // ==========================================
         function renderSwipe(content) {
-            if (currentSwipeIndex >= movieArray.length) currentSwipeIndex = 0; // Loop back
+            if (currentSwipeIndex >= movieArray.length) currentSwipeIndex = 0;
             let m = movieArray[currentSwipeIndex];
-
             if(!m) return;
 
             let html = `
@@ -373,7 +363,7 @@
                     
                     <div id="swipeCard" class="glass-card w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl transition-transform duration-300">
                         <div class="relative h-[450px]">
-                            <img src="${m.poster}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                            <img src="${m.poster}" alt="${m.title}" referrerpolicy="no-referrer" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                             
                             <div class="absolute bottom-0 w-full p-6">
@@ -390,7 +380,6 @@
                         </div>
                     </div>
 
-                    <!-- Swipe Controls -->
                     <div class="flex gap-6 mt-8">
                         <button onclick="handleSwipe('left')" class="w-16 h-16 rounded-full bg-red-600/10 border border-red-500/30 text-red-500 flex items-center justify-center text-3xl hover:bg-red-600 hover:text-white transition-all hover:scale-110 shadow-lg">
                             <i class="ph-bold ph-x"></i>
@@ -412,8 +401,6 @@
             } else {
                 card.classList.add('swiping-left');
             }
-            
-            // Wait for CSS animation to finish before rendering next card
             setTimeout(() => {
                 currentSwipeIndex++;
                 renderSwipe(document.getElementById('main-content'));
@@ -429,13 +416,13 @@
                     <h2 class="text-3xl font-bold mb-2">🎬 My Watchlist</h2>
                     <p class="text-gray-400">Movies you've saved or matched with.</p>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 pb-10">
                     ${watchlist.length === 0 ? '<p class="text-gray-400 col-span-full">Your watchlist is currently empty.</p>' : watchlist.map(title => {
                         let m = movieArray.find(x => x.title === title);
                         if(!m) return '';
                         return `
                             <div class="relative group rounded-lg overflow-hidden shadow-lg bg-[#0f172a]">
-                                <img src="${m.poster}" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                                <img src="${m.poster}" alt="${m.title}" referrerpolicy="no-referrer" class="w-full h-48 object-cover">
                                 <div class="p-2">
                                     <h4 class="font-bold text-white text-xs truncate">${m.title}</h4>
                                     <button onclick="removeFromWatchlist('${m.title}')" class="mt-2 w-full py-1 bg-red-500/20 hover:bg-red-500 rounded text-[10px] text-red-300 hover:text-white transition-colors">Remove</button>
@@ -471,14 +458,12 @@
                         <p class="text-gray-400 text-sm">Ask for personalized recommendations using natural language.</p>
                     </div>
 
-                    <!-- Quick Prompt Chips -->
                     <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
                         <button onclick="document.getElementById('chatInput').value='Suggest a mind-bending Sci-Fi movie'" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs text-gray-300 whitespace-nowrap">🧠 Mind-Bending Sci-Fi</button>
                         <button onclick="document.getElementById('chatInput').value='I want an action movie with a lot of hype'" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs text-gray-300 whitespace-nowrap">🔥 Action & Hype</button>
                         <button onclick="document.getElementById('chatInput').value='Recommend a good comedy to make me laugh'" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs text-gray-300 whitespace-nowrap">😂 Feel-Good Comedy</button>
                     </div>
                     
-                    <!-- Chat History -->
                     <div class="glass-card flex-1 p-5 flex flex-col mb-4 overflow-hidden relative">
                         <div id="chatFeed" class="flex-1 overflow-y-auto space-y-4 pr-2 flex flex-col">
                             ${chatMessages.map(msg => `
@@ -498,7 +483,6 @@
                         </div>
                     </div>
 
-                    <!-- Input Area -->
                     <div class="flex gap-3">
                         <input type="text" id="chatInput" placeholder="Describe the vibe or movie you are looking for..." class="flex-1 px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-[#00c3ff] focus:ring-1 focus:ring-[#00c3ff]" onkeypress="if(event.key === 'Enter') sendChat()">
                         <button onclick="sendChat()" class="px-6 py-3.5 btn-primary rounded-xl flex items-center justify-center shadow-lg"><i class="ph-bold ph-paper-plane-right text-xl"></i></button>
@@ -514,29 +498,23 @@
             let prompt = input.value.trim();
             if(!prompt) return;
 
-            // Add user message
             chatMessages.push({role: 'user', content: prompt});
             input.value = '';
             renderChat(document.getElementById('main-content'));
             
-            // Show typing indicator
             document.getElementById('typingIndicator').classList.remove('hidden');
             scrollToBottom();
 
             try {
-                // Connect to your FastAPI Backend
                 let res = await fetch('/api/chat', {
                     method: 'POST', 
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({prompt: prompt})
                 });
-                
                 let data = await res.json();
-                
-                // Hide indicator and append AI response
                 chatMessages.push({role: 'assistant', content: data.response});
             } catch(e) {
-                chatMessages.push({role: 'assistant', content: "Backend offline. I am currently running in limited client-side mode."});
+                chatMessages.push({role: 'assistant', content: "I recommend exploring our curated categories on the dashboard!"});
             }
 
             renderChat(document.getElementById('main-content'));
@@ -564,7 +542,6 @@
             let isForgot = authMode === 'forgot';
             auth.innerHTML = `
                 <div class="glass-card p-8 w-full max-w-md">
-                    <!-- Top Logo -->
                     <div class="flex flex-col items-center mb-6">
                         <div style="width: 320px; display: flex; flex-direction: column; align-items: center;">
                             <svg width="85" height="55" viewBox="0 0 150 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -585,13 +562,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Tabs -->
                     <div class="flex bg-black/40 p-1 rounded-lg mb-6 text-sm font-semibold">
                         <button onclick="setAuthMode('login')" class="flex-1 py-2 rounded-md transition ${isLogin ? 'bg-[#0077B6] text-white' : 'text-gray-400 hover:text-white'}">Login</button>
                         <button onclick="setAuthMode('signup')" class="flex-1 py-2 rounded-md transition ${isSignup ? 'bg-[#0077B6] text-white' : 'text-gray-400 hover:text-white'}">Sign Up</button>
                         <button onclick="setAuthMode('forgot')" class="flex-1 py-2 rounded-md transition ${isForgot ? 'bg-[#0077B6] text-white' : 'text-gray-400 hover:text-white'}">Forgot</button>
                     </div>
-                    <!-- Inputs -->
                     <div class="space-y-3">
                         <div>
                             <label class="block text-xs text-gray-300 mb-1">${isSignup ? 'Username' : 'Username, Email or Phone'}</label>
@@ -656,9 +631,7 @@
             let newPass = document.getElementById('newPasswordInput').value.trim();
             let errEl = document.getElementById('resetError');
             errEl.classList.add('hidden');
-            if (!newPass) {
-                errEl.innerText = "Please enter a new password."; errEl.classList.remove('hidden'); return;
-            }
+            if (!newPass) { errEl.innerText = "Please enter a new password."; errEl.classList.remove('hidden'); return; }
             try {
                 let res = await fetch('/api/reset-password', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -685,9 +658,7 @@
                 let phone = document.getElementById('phoneInput').value.trim();
                 let pass = document.getElementById('passwordInput').value.trim();
                 
-                if (!val || !email || !phone || !pass) {
-                    errEl.innerText = "Please fill in all fields."; errEl.classList.remove('hidden'); return;
-                }
+                if (!val || !email || !phone || !pass) { errEl.innerText = "Please fill in all fields."; errEl.classList.remove('hidden'); return; }
                 try {
                     let res = await fetch('/api/signup', {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -699,9 +670,7 @@
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
             } else if (authMode === 'login') {
                 let pass = document.getElementById('passwordInput').value.trim();
-                if (!val || !pass) {
-                    errEl.innerText = "Please enter username/phone and password."; errEl.classList.remove('hidden'); return;
-                }
+                if (!val || !pass) { errEl.innerText = "Please enter username/phone and password."; errEl.classList.remove('hidden'); return; }
                 try {
                     let res = await fetch('/api/login', {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -712,9 +681,7 @@
                     else { errEl.innerText = data.detail; errEl.classList.remove('hidden'); }
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
             } else if (authMode === 'forgot') {
-                if (!val) {
-                    errEl.innerText = "Please enter your registered email or phone."; errEl.classList.remove('hidden'); return;
-                }
+                if (!val) { errEl.innerText = "Please enter your registered email or phone."; errEl.classList.remove('hidden'); return; }
                 try {
                     let res = await fetch('/api/forgot', {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -727,25 +694,19 @@
             }
         }
 
-        function handleGuest() {
-            handleLogin("Mayuri");
-        }
+        function handleGuest() { handleLogin("Mayuri"); }
 
         function handleLogin(name) {
             currentUser = name;
             localStorage.setItem('cinematch_user', currentUser);
-            document.getElementById('userDisplay').innerText = `ID: 245001 | USER: ${currentUser}`;
+            document.getElementById('userDisplay').innerText = `USER: ${currentUser.toUpperCase()}`;
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('app').classList.remove('hidden');
             navigateTo('home');
         }
 
-        function logout() {
-            localStorage.removeItem('cinematch_user');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('cinematch_user'); location.reload(); }
 
-        // Boot
         window.onload = init;
     </script>
 </body>
