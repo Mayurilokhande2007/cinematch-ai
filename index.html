@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CinemaMatch AI</title>
+    
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;800&family=Kaushan+Script&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; color: #F3F4F6; min-height: 100vh; margin: 0; overflow: hidden; }
         h1, h2, h3, h4, h5 { font-family: 'Poppins', sans-serif; }
@@ -14,53 +17,61 @@
         .bg-blended-gradient {
             background-color: #0A1931;
             background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.03' transform='rotate(-15 200 200)'%3E%3Cg transform='translate(50, 80) scale(0.8)'%3E%3Crect x='0' y='15' width='60' height='40' rx='4'/%3E%3Cpolygon points='0,10 60,0 60,12 0,22'/%3E%3Cpolygon points='25,25 25,45 45,35'/%3E%3C/g%3E%3Cg transform='translate(250, 40) scale(0.6)'%3E%3Crect x='0' y='15' width='60' height='40' rx='4'/%3E%3Cpolygon points='0,10 60,0 60,12 0,22'/%3E%3Cpolygon points='25,25 25,45 45,35'/%3E%3C/g%3E%3Cg transform='translate(120, 250) scale(1.0)'%3E%3Crect x='0' y='15' width='60' height='40' rx='4'/%3E%3Cpolygon points='0,10 60,0 60,12 0,22'/%3E%3Cpolygon points='25,25 25,45 45,35'/%3E%3C/g%3E%3Cg transform='translate(320, 280) scale(0.7)'%3E%3Crect x='0' y='15' width='60' height='40' rx='4'/%3E%3Cpolygon points='0,10 60,0 60,12 0,22'/%3E%3Cpolygon points='25,25 25,45 45,35'/%3E%3C/g%3E%3Cg transform='translate(200, 150) scale(0.5)'%3E%3Crect x='0' y='15' width='60' height='40' rx='4'/%3E%3Cpolygon points='0,10 60,0 60,12 0,22'/%3E%3Cpolygon points='25,25 25,45 45,35'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"), linear-gradient(180deg, #040D21 0%, #0A1931 50%, #004080 100%);
-            background-attachment: fixed;
-            background-size: auto, cover;
-            min-height: 100vh;
+            background-attachment: fixed; background-size: auto, cover; min-height: 100vh;
         }
+        
         .glass-card {
-            background: rgba(10, 25, 49, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            background: rgba(10, 25, 49, 0.85); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
+        
         .btn-primary {
             background: linear-gradient(to right, #00B4D8, #0077B6);
             color: white; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 180, 216, 0.6); }
+        
+        /* Splash Screen & Logo Animations */
         .ai-gradient-text {
-            font-family: 'Kaushan Script', cursive;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Kaushan Script', cursive; background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-image: linear-gradient(to right, #00B4D8, #0077B6);
-            display: inline-block;
-            padding-right: 5px;
+            display: inline-block; padding-right: 5px;
         }
         @keyframes popUp {
             0% { opacity: 0; transform: translate(-50%, -40%) scale(0.8); }
             100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
-        @keyframes fadeOutLogo {
-            to { opacity: 0; visibility: hidden; }
-        }
+        @keyframes fadeOutLogo { to { opacity: 0; visibility: hidden; } }
         .splash-anim {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 999998;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            opacity: 0;
-            animation: popUp 1.5s 0.2s forwards, fadeOutLogo 0.5s 3.5s forwards;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 999998; display: flex; flex-direction: column; align-items: center;
+            opacity: 0; animation: popUp 1.5s 0.2s forwards, fadeOutLogo 0.5s 3.5s forwards;
         }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 195, 255, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 195, 255, 0.6); }
+
+        /* Swipe Card Animations */
+        @keyframes swipeRight { to { transform: translate(150%, 20deg) scale(0.8); opacity: 0; } }
+        @keyframes swipeLeft { to { transform: translate(-150%, -20deg) scale(0.8); opacity: 0; } }
+        .swiping-right { animation: swipeRight 0.5s forwards; }
+        .swiping-left { animation: swipeLeft 0.5s forwards; }
+        
+        /* Chat Typing Animation */
+        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
     </style>
 </head>
 <body class="bg-blended-gradient">
+
     <!-- Splash Screen -->
     <div id="page-splash" class="fixed inset-0 bg-black z-50 flex items-center justify-center">
         <div class="splash-anim">
@@ -93,16 +104,19 @@
             </div>
         </div>
     </div>
-    <!-- Auth / Reset Container -->
-    <div id="auth-container" class="hidden min-h-screen items-center justify-center p-4 bg-blended-gradient"></div>
-    <!-- Main Dashboard Container -->
-    <div id="app" class="hidden flex h-screen overflow-hidden bg-blended-gradient">
-        <aside id="sidebar" class="w-64 glass-card border-r border-gray-800 p-5 flex flex-col justify-between hidden md:flex">
+
+    <!-- Auth Container (Hidden if logged in) -->
+    <div id="auth-container" class="hidden min-h-screen items-center justify-center p-4"></div>
+
+    <!-- Main Dashboard -->
+    <div id="app" class="hidden flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="w-64 glass-card border-r border-gray-800 p-5 flex flex-col justify-between hidden md:flex z-20">
             <div>
-               <div class="sidebar-logo-section" style="text-align: center; margin-bottom: 1.5rem; width: 100%; max-width: 240px; margin-inline: auto;">
-                    <!-- 1. The Clapperboard SVG (Scaled for sidebar) -->
+                <!-- Custom SVG Logo -->
+                <div class="sidebar-logo-section" style="text-align: center; margin-bottom: 1.5rem; width: 100%; max-width: 240px; margin-inline: auto;">
                     <svg width="85" height="60" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto; display: block;">
-                        <!-- Top Hinge (Rotated with black stripes) -->
                         <g transform="translate(22, 28) rotate(-12)">
                             <rect x="0" y="-12" width="52" height="12" rx="1.5" fill="white" />
                             <rect x="6" y="-12" width="6" height="12" fill="#000000" />
@@ -110,42 +124,25 @@
                             <rect x="30" y="-12" width="6" height="12" fill="#000000" />
                             <rect x="42" y="-12" width="6" height="12" fill="#000000" />
                         </g>
-
-                        <!-- Bottom Board with Transparent Play Button -->
                         <path d="M 20 30 h 52 a 2 2 0 0 1 2 2 v 30 a 2 2 0 0 1 -2 2 h -52 a 2 2 0 0 1 -2 -2 v -30 a 2 2 0 0 1 2 -2 z M 42 38 v 14 l 12 -7 z" fill="white" fill-rule="evenodd" />
-
-                        <!-- Floating Digital Pixels -->
-                        <!-- Cyan -->
                         <rect x="76" y="16" width="3.5" height="3.5" fill="#00c3ff" />
                         <rect x="82" y="24" width="3" height="3" fill="#00c3ff" />
                         <rect x="78" y="32" width="4.5" height="4.5" fill="#00c3ff" />
-                        <!-- Dark Blue -->
                         <rect x="82" y="14" width="2.5" height="2.5" fill="#0055ff" />
                         <rect x="73" y="27" width="3" height="3" fill="#0055ff" />
                         <rect x="85" y="30" width="2.5" height="2.5" fill="#0055ff" />
                     </svg>
-
-                    <!-- 2. The Main Text -->
                     <div style="display: flex; align-items: center; justify-content: center; margin-top: 5px;">
                         <span style="font-family: 'Kaushan Script', cursive; font-size: 26px; color: white; line-height: 1;">CinemaMatch</span>
                         <span style="font-family: 'Inter', sans-serif; font-size: 26px; color: #00c3ff; font-style: italic; font-weight: 800; margin-left: 4px; line-height: 1;">AI</span>
                     </div>
-
-                    <!-- 3. The Subtext -->
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px;">
-                        <!-- Left Line (Dark Blue) -->
-                        <div style="height: 1.5px; width: 20px; background-color: #0055ff;"></div>
-                        
-                        <span style="font-family: 'Inter', sans-serif; font-size: 7.5px; color: white; letter-spacing: 1.2px; font-weight: 500; white-space: nowrap;">AI RECOMMENDS. YOU ENJOY.</span>
-                        
-                        <!-- Right Line (Cyan) -->
-                        <div style="height: 1.5px; width: 20px; background-color: #00c3ff;"></div>
-                    </div>
                 </div>
-                <p id="userDisplay" class="text-xs text-center text-gray-300 mb-4">User: Mayuri</p>
-            <nav class="space-y-2">
+
+                <p id="userDisplay" class="text-xs text-center text-gray-400 mb-6 font-semibold tracking-wide uppercase border-b border-gray-800 pb-4"></p>
+
+                <nav class="space-y-2">
                     <button onclick="navigateTo('home')" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-gray-300 hover:text-white font-medium">
-                        <i class="ph ph-house text-xl text-[#00c3ff]"></i> Home Dashboard
+                        <i class="ph ph-house text-xl text-[#00c3ff]"></i> Dashboard
                     </button>
                     <button onclick="navigateTo('search')" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-gray-300 hover:text-white font-medium">
                         <i class="ph ph-magnifying-glass text-xl text-[#00c3ff]"></i> Search
@@ -159,41 +156,71 @@
                     <button onclick="navigateTo('chat')" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-gray-300 hover:text-white font-medium">
                         <i class="ph ph-robot text-xl text-[#00c3ff]"></i> AI Assistant
                     </button>
-                    <button onclick="navigateTo('profile')" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-gray-300 hover:text-white font-medium">
-                        <i class="ph ph-user text-xl text-[#00c3ff]"></i> Profile & Stats
-                    </button>
-                    <button onclick="navigateTo('admin')" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-gray-300 hover:text-white font-medium">
-                        <i class="ph ph-shield-check text-xl text-[#00c3ff]"></i> Admin Panel
-                    </button>
                 </nav>
             </div>
-            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600/20 text-red-300 border border-red-500/30 rounded-lg hover:bg-red-600/30 transition font-medium">
-                <i class="ph ph-sign-out text-xl"></i> Logout
+            
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-600/20 transition font-medium">
+                <i class="ph ph-sign-out text-xl"></i> Terminate Session
             </button>
         </aside>
-        <main class="flex-1 overflow-y-auto p-8" id="main-content"></main>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 overflow-y-auto p-8 relative" id="main-content">
+            <!-- Injected via JavaScript -->
+        </main>
     </div>
+
     <script>
-        let moviesData = {};
+        // ==========================================
+        // GLOBAL STATE & DATA
+        // ==========================================
         let currentUser = localStorage.getItem('cinematch_user') || "Mayuri";
-        let watchlist = [];
-        let chatMessages = [];
         let authMode = 'login';
+        let movieArray = []; 
+        let watchlist = [];
+        let chatMessages = [{ role: 'assistant', content: 'Hi there! I am your AI movie advisor. What kind of vibe are you looking for today?' }];
+        let currentSwipeIndex = 0;
+        let activeMood = 'All';
+
+        // ==========================================
+        // INITIALIZATION & FETCH
+        // ==========================================
         async function init() {
             try {
-                let res = await fetch('/api/movies');
-                moviesData = await res.json();
-            } catch (e) { console.error("Could not fetch movies", e); }
+                // Fetch movies from FastAPI backend
+                let response = await fetch('/api/movies');
+                let data = await response.json();
+                
+                // Convert dictionary to an array for easy sorting/filtering
+                movieArray = Object.keys(data).map(key => ({
+                    title: key,
+                    ...data[key]
+                }));
+            } catch (e) {
+                console.error("Backend offline. Using fallback data.", e);
+                // Fallback in case the server isn't running
+                movieArray = [
+                    { title: "Interstellar", genre: "Sci-Fi", mood: "Mind-Bending", lang: "English", rating: 8.6, poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", desc: "Explorers travel through a wormhole in space to ensure humanity's survival." },
+                    { title: "The Dark Knight", genre: "Action", mood: "Adrenaline & Hype", lang: "English", rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", desc: "Batman must accept one of the greatest psychological and physical tests of his ability." }
+                ];
+            }
+            
+            // Randomize array safely
+            movieArray = movieArray.sort(() => 0.5 - Math.random());
+            
+            // Handle Splash Screen and Login Status
             setTimeout(() => {
                 let splash = document.getElementById('page-splash');
                 splash.style.transition = 'opacity 0.7s ease';
                 splash.style.opacity = '0';
+                
                 setTimeout(() => {
                     splash.style.display = 'none';
                     document.body.style.overflow = 'auto';
-                    // Check if URL is a password reset link
+                    
                     const urlParams = new URLSearchParams(window.location.search);
                     const resetUser = urlParams.get('user');
+                    
                     if (resetUser) {
                         showResetPasswordScreen(resetUser);
                     } else {
@@ -207,10 +234,327 @@
                 }, 700);
             }, 3800);
         }
+
+        // ==========================================
+        // NAVIGATION SYSTEM
+        // ==========================================
+        function navigateTo(page) {
+            const content = document.getElementById('main-content');
+            
+            if (page === 'home') renderHome(content);
+            else if (page === 'search') renderSearch(content);
+            else if (page === 'watchlist') renderWatchlist(content);
+            else if (page === 'swipe') renderSwipe(content);
+            else if (page === 'chat') renderChat(content);
+        }
+
+        // ==========================================
+        // 1. HOME DASHBOARD (21 Grid Layout)
+        // ==========================================
+        function renderHome(content) {
+            if (movieArray.length === 0) return;
+            
+            // Filter by Mood
+            let filtered = movieArray.filter(m => activeMood === 'All' || m.mood === activeMood);
+            if (filtered.length === 0) filtered = movieArray; // fallback if filter is empty
+            
+            const heroData = filtered[0];
+            const recommended = filtered.slice(1, 21); // Display up to 20 grid posters
+
+            let html = `
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-1">Welcome back, ${currentUser}!</h2>
+                    <p class="text-gray-400 text-sm">Ready for another adventure? AI has picked these just for you.</p>
+                </div>
+                
+                <!-- Mood Filters -->
+                <div class="mb-6 flex gap-2 overflow-x-auto pb-2">
+                    ${['All', 'Adrenaline & Hype', 'Mind-Bending', 'Feel-Good', 'Dark & Thrilling'].map(mood => `
+                        <button onclick="activeMood='${mood}'; navigateTo('home')" class="px-4 py-1.5 rounded-full text-xs font-semibold transition ${activeMood === mood ? 'bg-[#00c3ff] text-black shadow-[0_0_10px_rgba(0,195,255,0.5)]' : 'bg-white/10 text-gray-300 hover:bg-white/20'}">
+                            ${mood}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <!-- HERO BANNER -->
+                <div class="glass-card p-6 bg-cover bg-center rounded-xl mb-8 relative overflow-hidden" style="background-image: linear-gradient(to right, rgba(10,25,49,1) 0%, rgba(10,25,49,0.8) 50%, rgba(10,25,49,0) 100%), url('${heroData.poster}');">
+                    <div class="relative z-10 w-full md:w-2/3">
+                        <span class="text-yellow-400 font-bold text-sm mb-2 block flex items-center gap-1"><i class="ph-fill ph-star"></i> ${heroData.rating}</span>
+                        <h1 class="text-4xl font-extrabold uppercase mb-2 text-white">${heroData.title}</h1>
+                        <p class="text-gray-200 text-sm mb-5 line-clamp-3">${heroData.desc}</p>
+                        <button onclick="addToWatchlist('${heroData.title}')" class="px-6 py-2.5 btn-primary flex items-center gap-2"><i class="ph-bold ph-plus"></i> Watchlist</button>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="ph-fill ph-fire text-orange-500"></i> Recommended For You (AI Hybrid)
+                </h3>
+
+                <!-- POSTER GRID (20 Cards) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 pb-10">
+                    ${recommended.map(m => `
+                        <div class="relative group rounded-xl overflow-hidden shadow-lg hover:-translate-y-2 transition-all bg-[#0f172a]">
+                            <div class="absolute top-2 right-2 z-20 px-2 py-0.5 rounded-md bg-black/70 text-yellow-400 text-xs font-bold flex items-center gap-1"><i class="ph-fill ph-star text-xs"></i> ${m.rating}</div>
+                            <img src="${m.poster}" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                            
+                            <!-- Hover Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0a1931] via-[#0a1931]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-3 backdrop-blur-[2px] z-10">
+                                <h4 class="font-bold text-white text-sm mb-1">${m.title}</h4>
+                                <div class="flex items-center gap-1 text-gray-300 text-[10px] mb-2"><span>${m.genre}</span> • <span>${m.lang}</span></div>
+                                <button onclick="addToWatchlist('${m.title}')" class="w-full py-2 bg-gradient-to-r from-[#00c3ff] to-[#0077b6] rounded text-xs font-semibold text-white transition-colors">+ Watchlist</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+
+        // ==========================================
+        // 2. SEARCH FEATURE (Real-Time)
+        // ==========================================
+        function renderSearch(content, query = '') {
+            let results = movieArray.filter(m => 
+                m.title.toLowerCase().includes(query.toLowerCase()) || 
+                m.genre.toLowerCase().includes(query.toLowerCase()) ||
+                m.lang.toLowerCase().includes(query.toLowerCase())
+            );
+
+            let html = `
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold mb-4">Search Database</h2>
+                    <div class="relative max-w-2xl">
+                        <i class="ph-bold ph-magnifying-glass absolute left-4 top-4 text-gray-400 text-xl"></i>
+                        <input type="text" id="searchInput" value="${query}" placeholder="Search by title, genre, or language (e.g., Sci-Fi, Hindi, Inception)..." 
+                            class="w-full pl-12 pr-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-[#00c3ff] focus:ring-1 focus:ring-[#00c3ff] transition-all"
+                            onkeyup="handleSearchInput(event)">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 pb-10">
+                    ${results.length === 0 ? '<p class="text-gray-400 col-span-full">No results found.</p>' : results.map(m => `
+                        <div class="relative group rounded-xl overflow-hidden shadow-lg bg-[#0f172a]">
+                            <img src="${m.poster}" class="w-full h-64 object-cover" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0a1931] via-transparent to-transparent flex flex-col justify-end p-3">
+                                <h4 class="font-bold text-white text-sm">${m.title}</h4>
+                                <button onclick="addToWatchlist('${m.title}')" class="mt-2 w-full py-1.5 bg-white/20 hover:bg-[#00c3ff] rounded text-xs text-white transition-colors">+ Add</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            content.innerHTML = html;
+            
+            // Keep focus on input while typing
+            let input = document.getElementById('searchInput');
+            if (input) {
+                input.focus();
+                input.setSelectionRange(input.value.length, input.value.length);
+            }
+        }
+
+        function handleSearchInput(e) {
+            renderSearch(document.getElementById('main-content'), e.target.value);
+        }
+
+        // ==========================================
+        // 3. SWIPE MATCH (Tinder-Style UI)
+        // ==========================================
+        function renderSwipe(content) {
+            if (currentSwipeIndex >= movieArray.length) currentSwipeIndex = 0; // Loop back
+            let m = movieArray[currentSwipeIndex];
+
+            if(!m) return;
+
+            let html = `
+                <div class="flex flex-col items-center justify-center h-full pb-10">
+                    <h2 class="text-2xl font-bold mb-2">Swipe Match</h2>
+                    <p class="text-gray-400 text-sm mb-6">Discover new favorites. Pass or Match.</p>
+                    
+                    <div id="swipeCard" class="glass-card w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl transition-transform duration-300">
+                        <div class="relative h-[450px]">
+                            <img src="${m.poster}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                            
+                            <div class="absolute bottom-0 w-full p-6">
+                                <div class="flex justify-between items-end mb-2">
+                                    <h3 class="text-3xl font-extrabold text-white leading-tight">${m.title}</h3>
+                                    <span class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded font-bold text-sm border border-yellow-500/30 mb-1 flex items-center gap-1"><i class="ph-fill ph-star"></i> ${m.rating}</span>
+                                </div>
+                                <div class="flex gap-2 text-xs text-gray-300 mb-3">
+                                    <span class="bg-white/10 px-2 py-1 rounded">${m.genre}</span>
+                                    <span class="bg-white/10 px-2 py-1 rounded">${m.lang}</span>
+                                </div>
+                                <p class="text-sm text-gray-300 line-clamp-3">${m.desc}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swipe Controls -->
+                    <div class="flex gap-6 mt-8">
+                        <button onclick="handleSwipe('left')" class="w-16 h-16 rounded-full bg-red-600/10 border border-red-500/30 text-red-500 flex items-center justify-center text-3xl hover:bg-red-600 hover:text-white transition-all hover:scale-110 shadow-lg">
+                            <i class="ph-bold ph-x"></i>
+                        </button>
+                        <button onclick="handleSwipe('right')" class="w-16 h-16 rounded-full bg-green-500/10 border border-green-400/30 text-green-400 flex items-center justify-center text-3xl hover:bg-green-500 hover:text-white transition-all hover:scale-110 shadow-lg">
+                            <i class="ph-fill ph-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+
+        function handleSwipe(direction) {
+            const card = document.getElementById('swipeCard');
+            if (direction === 'right') {
+                addToWatchlist(movieArray[currentSwipeIndex].title, true);
+                card.classList.add('swiping-right');
+            } else {
+                card.classList.add('swiping-left');
+            }
+            
+            // Wait for CSS animation to finish before rendering next card
+            setTimeout(() => {
+                currentSwipeIndex++;
+                renderSwipe(document.getElementById('main-content'));
+            }, 300);
+        }
+
+        // ==========================================
+        // 4. WATCHLIST
+        // ==========================================
+        function renderWatchlist(content) {
+            let html = `
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">🎬 My Watchlist</h2>
+                    <p class="text-gray-400">Movies you've saved or matched with.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    ${watchlist.length === 0 ? '<p class="text-gray-400 col-span-full">Your watchlist is currently empty.</p>' : watchlist.map(title => {
+                        let m = movieArray.find(x => x.title === title);
+                        if(!m) return '';
+                        return `
+                            <div class="relative group rounded-lg overflow-hidden shadow-lg bg-[#0f172a]">
+                                <img src="${m.poster}" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/500x750?text=No+Poster'">
+                                <div class="p-2">
+                                    <h4 class="font-bold text-white text-xs truncate">${m.title}</h4>
+                                    <button onclick="removeFromWatchlist('${m.title}')" class="mt-2 w-full py-1 bg-red-500/20 hover:bg-red-500 rounded text-[10px] text-red-300 hover:text-white transition-colors">Remove</button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+
+        function addToWatchlist(title, silent = false) {
+            if(!watchlist.includes(title)) { 
+                watchlist.push(title); 
+                if(!silent) alert(`Added ${title} to Watchlist!`); 
+            }
+        }
+
+        function removeFromWatchlist(title) {
+            watchlist = watchlist.filter(m => m !== title);
+            renderWatchlist(document.getElementById('main-content'));
+        }
+
+        // ==========================================
+        // 5. AI ASSISTANT CHAT
+        // ==========================================
+        function renderChat(content) {
+            let html = `
+                <div class="flex flex-col h-full max-h-[85vh]">
+                    <div class="mb-4">
+                        <h2 class="text-3xl font-bold mb-1">🤖 AI Assistant</h2>
+                        <p class="text-gray-400 text-sm">Ask for personalized recommendations using natural language.</p>
+                    </div>
+
+                    <!-- Quick Prompt Chips -->
+                    <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+                        <button onclick="document.getElementById('chatInput').value='Suggest a mind-bending Sci-Fi movie'" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs text-gray-300 whitespace-nowrap">🧠 Mind-Bending Sci-Fi</button>
+                        <button onclick="document.getElementById('chatInput').value='I want an action movie with a lot of hype'" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs text-gray-300 whitespace-nowrap">🔥 Action & Hype</button>
+                        <button onclick="document.getElementById('chatInput').value='Recommend a good comedy to make me laugh'" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs text-gray-300 whitespace-nowrap">😂 Feel-Good Comedy</button>
+                    </div>
+                    
+                    <!-- Chat History -->
+                    <div class="glass-card flex-1 p-5 flex flex-col mb-4 overflow-hidden relative">
+                        <div id="chatFeed" class="flex-1 overflow-y-auto space-y-4 pr-2 flex flex-col">
+                            ${chatMessages.map(msg => `
+                                <div class="flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}">
+                                    <div class="max-w-[80%] rounded-2xl px-5 py-3 ${msg.role === 'user' ? 'bg-gradient-to-r from-[#00c3ff] to-[#0077b6] text-white shadow-lg' : 'bg-white/10 border border-white/10 text-gray-200'}">
+                                        <p class="text-sm leading-relaxed">${msg.content}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            <div id="typingIndicator" class="hidden flex justify-start">
+                                <div class="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 flex gap-1 items-center">
+                                    <div class="w-2 h-2 bg-[#00c3ff] rounded-full typing-dot"></div>
+                                    <div class="w-2 h-2 bg-[#00c3ff] rounded-full typing-dot"></div>
+                                    <div class="w-2 h-2 bg-[#00c3ff] rounded-full typing-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="flex gap-3">
+                        <input type="text" id="chatInput" placeholder="Describe the vibe or movie you are looking for..." class="flex-1 px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-[#00c3ff] focus:ring-1 focus:ring-[#00c3ff]" onkeypress="if(event.key === 'Enter') sendChat()">
+                        <button onclick="sendChat()" class="px-6 py-3.5 btn-primary rounded-xl flex items-center justify-center shadow-lg"><i class="ph-bold ph-paper-plane-right text-xl"></i></button>
+                    </div>
+                </div>
+            `;
+            content.innerHTML = html;
+            scrollToBottom();
+        }
+
+        async function sendChat() {
+            let input = document.getElementById('chatInput');
+            let prompt = input.value.trim();
+            if(!prompt) return;
+
+            // Add user message
+            chatMessages.push({role: 'user', content: prompt});
+            input.value = '';
+            renderChat(document.getElementById('main-content'));
+            
+            // Show typing indicator
+            document.getElementById('typingIndicator').classList.remove('hidden');
+            scrollToBottom();
+
+            try {
+                // Connect to your FastAPI Backend
+                let res = await fetch('/api/chat', {
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({prompt: prompt})
+                });
+                
+                let data = await res.json();
+                
+                // Hide indicator and append AI response
+                chatMessages.push({role: 'assistant', content: data.response});
+            } catch(e) {
+                chatMessages.push({role: 'assistant', content: "Backend offline. I am currently running in limited client-side mode."});
+            }
+
+            renderChat(document.getElementById('main-content'));
+        }
+
+        function scrollToBottom() {
+            let feed = document.getElementById('chatFeed');
+            if(feed) feed.scrollTop = feed.scrollHeight;
+        }
+
+        // ==========================================
+        // AUTHENTICATION LOGIC
+        // ==========================================
         function setAuthMode(mode) {
             authMode = mode;
             showAuth();
         }
+
         function showAuth() {
             let auth = document.getElementById('auth-container');
             auth.style.display = 'flex';
@@ -220,7 +564,7 @@
             let isForgot = authMode === 'forgot';
             auth.innerHTML = `
                 <div class="glass-card p-8 w-full max-w-md">
-                    <!-- Uncropped Logo Container -->
+                    <!-- Top Logo -->
                     <div class="flex flex-col items-center mb-6">
                         <div style="width: 320px; display: flex; flex-direction: column; align-items: center;">
                             <svg width="85" height="55" viewBox="0 0 150 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -238,11 +582,6 @@
                             <div class="text-3xl mt-1 flex items-center justify-center gap-1 w-full" style="white-space: nowrap; overflow: visible;">
                                 <span style="font-family: 'Kaushan Script', cursive; color: #FFFFFF;">CinemaMatch</span>
                                 <span class="ai-gradient-text">AI</span>
-                            </div>
-                            <div style="display: flex; align-items: center; justify-content: center; margin-top: 3px; gap: 8px; width: 100%;">
-                                <div style="height: 1px; width: 25px; background-color: #0077B6;"></div>
-                                <span style="font-family: 'Inter', sans-serif; font-size: 8px; letter-spacing: 1.5px; color: #E0E0E0; text-transform: uppercase;">AI RECOMMENDS. YOU ENJOY.</span>
-                                <div style="height: 1px; width: 25px; background-color: #0077B6;"></div>
                             </div>
                         </div>
                     </div>
@@ -275,10 +614,7 @@
                             <div class="relative">
                                 <input type="password" id="passwordInput" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-lg bg-white text-black font-semibold focus:outline-none pr-10">
                                 <button type="button" onclick="togglePassword()" class="absolute right-3 top-3 text-gray-600 hover:text-black">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                 </button>
                             </div>
                         </div>
@@ -294,7 +630,7 @@
                 </div>
             `;
         }
-        // Interface for updating password via the email link
+
         function showResetPasswordScreen(usernameOrEmail) {
             let auth = document.getElementById('auth-container');
             auth.style.display = 'flex';
@@ -315,51 +651,42 @@
                 </div>
             `;
         }
+
         async function submitNewPassword(identifier) {
             let newPass = document.getElementById('newPasswordInput').value.trim();
             let errEl = document.getElementById('resetError');
             errEl.classList.add('hidden');
             if (!newPass) {
-                errEl.innerText = "Please enter a new password.";
-                errEl.classList.remove('hidden');
-                return;
+                errEl.innerText = "Please enter a new password."; errEl.classList.remove('hidden'); return;
             }
             try {
                 let res = await fetch('/api/reset-password', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({username: identifier, new_password: newPass})
                 });
                 let data = await res.json();
-                if (res.ok) {
-                    alert(data.message);
-                    window.location.href = '/'; // Redirect back to login
-                } else {
-                    errEl.innerText = data.detail;
-                    errEl.classList.remove('hidden');
-                }
-            } catch(e) {
-                errEl.innerText = "Backend connection error.";
-                errEl.classList.remove('hidden');
-            }
+                if (res.ok) { alert(data.message); window.location.href = '/'; } 
+                else { errEl.innerText = data.detail; errEl.classList.remove('hidden'); }
+            } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
         }
+
         function togglePassword() {
             let passInput = document.getElementById('passwordInput');
             passInput.type = passInput.type === 'password' ? 'text' : 'password';
         }
+
         async function submitAuth() {
             let errEl = document.getElementById('authError');
             errEl.classList.add('hidden');
             let val = document.getElementById('userInput').value.trim();
+            
             if (authMode === 'signup') {
                 let email = document.getElementById('emailInput').value.trim();
                 let phone = document.getElementById('phoneInput').value.trim();
                 let pass = document.getElementById('passwordInput').value.trim();
                 
                 if (!val || !email || !phone || !pass) {
-                    errEl.innerText = "Please fill in all fields.";
-                    errEl.classList.remove('hidden');
-                    return;
+                    errEl.innerText = "Please fill in all fields."; errEl.classList.remove('hidden'); return;
                 }
                 try {
                     let res = await fetch('/api/signup', {
@@ -367,20 +694,13 @@
                         body: JSON.stringify({username: val, email: email, phone: phone, password: pass})
                     });
                     let data = await res.json();
-                    if (res.ok) {
-                        alert(data.message);
-                        setAuthMode('login');
-                    } else {
-                        errEl.innerText = data.detail;
-                        errEl.classList.remove('hidden');
-                    }
+                    if (res.ok) { alert(data.message); setAuthMode('login'); } 
+                    else { errEl.innerText = data.detail; errEl.classList.remove('hidden'); }
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
             } else if (authMode === 'login') {
                 let pass = document.getElementById('passwordInput').value.trim();
                 if (!val || !pass) {
-                    errEl.innerText = "Please enter username/phone and password.";
-                    errEl.classList.remove('hidden');
-                    return;
+                    errEl.innerText = "Please enter username/phone and password."; errEl.classList.remove('hidden'); return;
                 }
                 try {
                     let res = await fetch('/api/login', {
@@ -388,147 +708,44 @@
                         body: JSON.stringify({identifier: val, password: pass})
                     });
                     let data = await res.json();
-                    if (res.ok) {
-                        handleLogin(data.username);
-                    } else {
-                        errEl.innerText = data.detail;
-                        errEl.classList.remove('hidden');
-                    }
+                    if (res.ok) { handleLogin(data.username); } 
+                    else { errEl.innerText = data.detail; errEl.classList.remove('hidden'); }
                 } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
-           } else if (authMode === 'forgot') {
-    if (!val) {
-        errEl.innerText = "Please enter your registered email or phone.";
-        errEl.classList.remove('hidden');
-        return;
-    }
-    try {
-        let res = await fetch('/api/forgot', {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({identifier: val})
-        });
-        let data = await res.json();
-        if (res.ok) {
-            alert(data.message); // Clean success notification
-            setAuthMode('login');
-        } else {
-            errEl.innerText = data.detail;
-            errEl.classList.remove('hidden');
+            } else if (authMode === 'forgot') {
+                if (!val) {
+                    errEl.innerText = "Please enter your registered email or phone."; errEl.classList.remove('hidden'); return;
+                }
+                try {
+                    let res = await fetch('/api/forgot', {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({identifier: val})
+                    });
+                    let data = await res.json();
+                    if (res.ok) { alert(data.message); setAuthMode('login'); } 
+                    else { errEl.innerText = data.detail; errEl.classList.remove('hidden'); }
+                } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
+            }
         }
-    } catch(e) { errEl.innerText = "Backend connection error."; errEl.classList.remove('hidden'); }
-}
-        }
+
         function handleGuest() {
             handleLogin("Mayuri");
         }
+
         function handleLogin(name) {
             currentUser = name;
             localStorage.setItem('cinematch_user', currentUser);
-            document.getElementById('userDisplay').innerText = `User: ${currentUser}`;
+            document.getElementById('userDisplay').innerText = `ID: 245001 | USER: ${currentUser}`;
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('app').classList.remove('hidden');
             navigateTo('home');
         }
-        function navigateTo(page) {
-            const content = document.getElementById('main-content');
-            if (page === 'home') {
-                content.innerHTML = `
-                    <h2 class="text-3xl font-bold mb-2">Welcome back, ${currentUser}!</h2>
-                    <p class="text-gray-400 mb-6">Ready for another adventure? AI has picked something special today.</p>
-                    <div class="glass-card p-6 bg-cover bg-center rounded-xl mb-8 relative overflow-hidden" style="background-image: linear-gradient(to right, rgba(11,15,25,1) 0%, rgba(11,15,25,0.6) 50%, rgba(11,15,25,0) 100%), url('https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg');">
-                        <h1 class="text-4xl font-extrabold uppercase mb-2">Interstellar</h1>
-                        <p class="text-red-500 font-bold mb-2">⭐ 8.6 | Sci-Fi | 2014</p>
-                        <p class="max-w-md text-gray-300 text-sm mb-4">Explorers travel through a wormhole in space to ensure humanity's survival.</p>
-                        <button onclick="addToWatchlist('Interstellar')" class="px-4 py-2 btn-primary">+ Watchlist</button>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">🔥 Recommended For You (AI Hybrid)</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                        ${Object.keys(moviesData).slice(0, 5).map(m => `
-                            <div class="glass-card p-3 flex flex-col justify-between">
-                                <img src="${moviesData[m].poster}" class="rounded-lg h-48 object-cover mb-2">
-                                <h4 class="font-bold text-sm mb-1">${m}</h4>
-                                <button onclick="addToWatchlist('${m}')" class="w-full py-1.5 bg-white/10 rounded text-xs hover:bg-white/20 transition">+ Watchlist</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (page === 'watchlist') {
-                content.innerHTML = `
-                    <h2 class="text-3xl font-bold mb-6">🎬 My Watchlist</h2>
-                    <div class="space-y-4">
-                        ${watchlist.length === 0 ? '<p class="text-gray-400">Your watchlist is empty.</p>' : watchlist.map(m => `
-                            <div class="glass-card p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <img src="${moviesData[m]?.poster}" class="w-16 h-20 object-cover rounded">
-                                    <div>
-                                        <h4 class="font-bold text-lg">${m}</h4>
-                                        <p class="text-sm text-gray-400">${moviesData[m]?.desc}</p>
-                                    </div>
-                                </div>
-                                <button onclick="removeFromWatchlist('${m}')" class="px-3 py-1.5 bg-red-600/20 text-red-300 rounded text-sm">Remove</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (page === 'chat') {
-                content.innerHTML = `
-                    <h2 class="text-3xl font-bold mb-2">🤖 Ask CineMatch AI</h2>
-                    <p class="text-gray-400 mb-6">Ask for highly personalized recommendations using Natural Language.</p>
-                    <div class="glass-card p-6 flex flex-col h-[60vh] justify-between">
-                        <div id="chatMessages" class="overflow-y-auto space-y-3 mb-4 flex-1 pr-2">
-                            ${chatMessages.map(msg => `<div class="p-3 rounded-lg ${msg.role === 'user' ? 'bg-blue-600/30 ml-auto' : 'bg-gray-800'} max-w-lg">${msg.content}</div>`).join('')}
-                        </div>
-                        <div class="flex gap-2">
-                            <input type="text" id="chatInput" placeholder="E.g., Suggest a sci-fi movie..." class="flex-1 px-4 py-3 rounded-lg bg-white text-black font-semibold focus:outline-none">
-                            <button onclick="sendChat()" class="px-6 py-3 btn-primary">Send</button>
-                        </div>
-                    </div>
-                `;
-            } else if (page === 'admin') {
-                content.innerHTML = `
-                    <h2 class="text-3xl font-bold mb-2">🛡️ Admin & Analytics Dashboard</h2>
-                    <p class="text-gray-400 mb-6">Platform metrics and ML model statuses for CineMatch AI.</p>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <div class="glass-card p-4"><p class="text-gray-400 text-sm">Active Users</p><h3 class="text-2xl font-bold">1,245,039</h3></div>
-                        <div class="glass-card p-4"><p class="text-gray-400 text-sm">Movies in DB</p><h3 class="text-2xl font-bold">45,902</h3></div>
-                        <div class="glass-card p-4"><p class="text-gray-400 text-sm">AI Recs Served</p><h3 class="text-2xl font-bold">84M+</h3></div>
-                        <div class="glass-card p-4"><p class="text-gray-400 text-sm">Avg Rating</p><h3 class="text-2xl font-bold">4.2 / 5.0</h3></div>
-                    </div>
-                    <div class="glass-card p-6 space-y-3">
-                        <div class="flex items-center justify-between"><span>✅ Collaborative Filtering Engine (SVD)</span><span class="text-green-400 text-sm">Online (42ms)</span></div>
-                        <div class="flex items-center justify-between"><span>✅ Content-Based Engine (Cosine)</span><span class="text-green-400 text-sm">Online (18ms)</span></div>
-                        <div class="flex items-center justify-between"><span>✅ NLP Chat Assistant (Transformer)</span><span class="text-green-400 text-sm">Online (110ms)</span></div>
-                    </div>
-                `;
-            } else {
-                content.innerHTML = `<h2 class="text-3xl font-bold mb-4">${page.toUpperCase()}</h2><p class="text-gray-400">Module under active development.</p>`;
-            }
-        }
-        function addToWatchlist(movie) {
-            if(!watchlist.includes(movie)) { watchlist.push(movie); alert(`Added ${movie} to Watchlist!`); }
-        }
-        function removeFromWatchlist(movie) {
-            watchlist = watchlist.filter(m => m !== movie);
-            navigateTo('watchlist');
-        }
-        async function sendChat() {
-            let input = document.getElementById('chatInput');
-            let prompt = input.value.trim();
-            if(!prompt) return;
-            chatMessages.push({role: 'user', content: prompt});
-            input.value = '';
-            navigateTo('chat');
-            let res = await fetch('/api/chat', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({prompt: prompt})
-            });
-            let data = await res.json();
-            chatMessages.push({role: 'assistant', content: data.response});
-            navigateTo('chat');
-        }
+
         function logout() {
             localStorage.removeItem('cinematch_user');
             location.reload();
         }
+
+        // Boot
         window.onload = init;
     </script>
 </body>
